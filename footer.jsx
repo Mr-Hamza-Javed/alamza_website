@@ -54,8 +54,8 @@ function Footer({ onApply }) {
               </div>
               <div className="footer__col footer__col--wide">
                 <span className="footer__col-h mono">Contact</span>
-                <a href="mailto:info@alamzaindustry.com">info@alamzaindustry.com</a>
-                <a href="tel:+92000000000">+92 (0) 00 0000000</a>
+                <a href="mailto:HamzaJaved1213@gmail.com">info@alamzaindustry.com</a>
+                <a href="tel:+92000000000">+92 3030005606</a>
                 <span className="footer__addr dim">Industrial Estate, Sahiwal,<br />Punjab, Pakistan</span>
               </div>
             </div>
