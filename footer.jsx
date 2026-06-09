@@ -17,7 +17,7 @@ function Footer({ onApply }) {
                 </h2>
               </Reveal>
               <Reveal delay={140} className="contact__actions">
-                <a href="mailto:info@alamzaindustry.com" className="btn btn--primary">
+                <a href="mailto:HamzaJaved1213@gmail.com" className="btn btn--primary">
                   Request a Quote <span className="arr">→</span>
                 </a>
                 <button className="btn btn--ghost" onClick={onApply}>Apply as Intern</button>
@@ -54,8 +54,8 @@ function Footer({ onApply }) {
               </div>
               <div className="footer__col footer__col--wide">
                 <span className="footer__col-h mono">Contact</span>
-                <a href="mailto:HamzaJaved1213@gmail.com">info@alamzaindustry.com</a>
-                <a href="tel:+92000000000">+92 3030005606</a>
+                <a href="mailto:HamzaJaved1213@gmail.com">HamzaJaved1213@gmail.com</a>
+                <a href="tel:+923030005606">+92 3030005606</a>
                 <span className="footer__addr dim">Industrial Estate, Sahiwal,<br />Punjab, Pakistan</span>
               </div>
             </div>
