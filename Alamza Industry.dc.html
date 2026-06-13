@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&amp;family=Anton&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <script src="firebase-config.js"></script>
+  <script src="site-content.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #0b0e13; -webkit-font-smoothing: antialiased; }
+    @keyframes dcPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    [data-mobile-menu] { display: none; }
+    @media (max-width: 980px) {
+      [data-desktop-nav] { display: none !important; }
+      [data-desktop-cta] { display: none !important; }
+      [data-mobile-menu] { display: flex !important; }
+    }
+    @media (max-width: 760px) {
+      [data-hero-3d] { display: none !important; }
+    }
+    /* Showcase: single column + text-first on mobile/tablet; 2-col + alternating on desktop */
+    [data-sc-panel] { grid-template-columns: 1fr; }
+    @media (min-width: 860px) {
+      [data-sc-panel] { grid-template-columns: 1fr 1fr; }
+      [data-sc-list] > [data-sc-panel]:nth-child(even) { direction: rtl; }
+      [data-sc-list] > [data-sc-panel]:nth-child(even) > * { direction: ltr; }
+    }
+    @media (max-width: 600px) {
+      [data-sc-code] { display: none !important; }
+    }
+  </style>
+</helmet>
+
+<div style="background: #0b0e13; font-family: Archivo, sans-serif; color: #e8eaed; overflow-x: hidden;">
+
+  <!-- ═══════════ NAV ═══════════ -->
+  <div style="position: sticky; top: 0; z-index: 60; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(11,14,19,0.85); border-bottom: 1px solid rgba(255,255,255,0.07)">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px clamp(20px, 5vw, 60px);">
+      <a href="#top" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #e8eaed;">
+        <div style="position: relative; width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0b0e13; overflow: hidden; flex-shrink: 0;">
+          <span data-ph="">A</span>
+          <img src="logo.png" alt="{{ c.brand.name }} logo" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+        </div>
+        <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 16px; white-space: nowrap;">{{ c.brand.name }} <span style="color: #5b9bff;">{{ c.brand.nameAccent }}</span></div>
+      </a>
+      <div data-desktop-nav="" style="display: flex; gap: 24px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1px;">
+        <a href="#products" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">PRODUCTS</a>
+        <a href="#showcase" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">SHOWCASE</a>
+        <a href="#about" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">ABOUT</a>
+        <a href="#team" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">TEAM</a>
+        <sc-if value="{{ hasGallery }}" hint-placeholder-val="{{ false }}"><a href="#gallery" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">GALLERY</a></sc-if>
+        <a href="#contact" style="color: #9aa3ad; text-decoration: none;" style-hover="color: #e8eaed;">CONTACT</a>
+      </div>
+      <a data-desktop-cta="" href="#contact" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #5b9bff; border: 1px solid rgba(91,155,255,0.45); padding: 9px 18px; border-radius: 6px; text-decoration: none; white-space: nowrap;" style-hover="background: rgba(91,155,255,0.12);">GET A QUOTE</a>
+      <div data-mobile-menu="" onClick="{{ toggleNav }}" style="align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: #5b9bff; border: 1px solid rgba(91,155,255,0.45); padding: 9px 16px; border-radius: 6px; cursor: pointer; user-select: none;">MENU</div>
+      <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; top: 100%; left: 0; right: 0; background: #0d1117; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; padding: 8px 0 14px; box-shadow: 0 30px 50px rgba(0,0,0,0.5);">
+          <a href="#products" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">PRODUCTS</a>
+          <a href="#showcase" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">SHOWCASE</a>
+          <a href="#about" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">ABOUT</a>
+          <a href="#team" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">TEAM</a>
+          <sc-if value="{{ hasGallery }}" hint-placeholder-val="{{ false }}"><a href="#gallery" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">GALLERY</a></sc-if>
+          <a href="#interns" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">INTERN PORTAL</a>
+          <a href="#contact" onClick="{{ closeNav }}" style="color: #5b9bff; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">GET A QUOTE →</a>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div id="top" data-screen-label="Hero" style="background-color: #0b0e13; background-image: linear-gradient(rgba(91,155,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.05) 1px, transparent 1px); background-size: 48px 48px; border-bottom: 1px solid rgba(255,255,255,0.06); position: static">
+    <div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: clamp(44px, 6.5vw, 80px) clamp(24px, 5vw, 60px) clamp(40px, 6vw, 70px); align-items: center;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #5b9bff;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #5b9bff; box-shadow: 0 0 12px #5b9bff; animation: dcPulse 2.4s ease-in-out infinite; flex-shrink: 0;"></span>
+          <span>{{ c.hero.eyebrow }}</span>
+        </div>
+        <h1 style="margin: 20px 0 18px; font-family: Anton, sans-serif; font-weight: 400; font-size: clamp(48px, 7vw, 92px); line-height: 0.97; letter-spacing: 1px; background: linear-gradient(180deg, #f4f6f8 18%, #aeb6c0 48%, #5d6670 72%, #98a2ad); -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance;">{{ c.hero.title }}</h1>
+        <p style="margin: 0 0 28px; color: #9aa3ad; font-size: clamp(15px, 1.4vw, 17px); line-height: 1.65; max-width: 520px; text-wrap: pretty;">{{ c.hero.sub }}</p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="#products" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 26px; border-radius: 8px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;" style-hover="transform: translateY(-2px); box-shadow: 0 14px 30px rgba(37,99,235,0.45);">{{ c.hero.ctaPrimary }}</a>
+          <a href="{{ waHref }}" target="_blank" rel="noopener" style="border: 1px solid #2b3340; color: #c8cfd8; font-weight: 600; font-size: 14.5px; padding: 14px 26px; border-radius: 8px; text-decoration: none; transition: border-color 0.2s ease;" style-hover="border-color: #5b9bff;">{{ c.hero.ctaSecondary }}</a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 36px; background: #232a33; border: 1px solid #232a33; border-radius: 12px; overflow: hidden; max-width: 430px;">
+          <div style="background: #0b0e13; padding: 14px 16px;">
+            <div style="font-weight: 800; font-size: clamp(15px, 3.4vw, 21px); line-height: 1.05; white-space: nowrap;">{{ c.hero.stat1v }}</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: #79828c; margin-top: 7px; line-height: 1.35;">{{ c.hero.stat1l }}</div>
+          </div>
+          <div style="background: #0b0e13; padding: 14px 16px;">
+            <div style="font-weight: 800; font-size: clamp(15px, 3.4vw, 21px); line-height: 1.05; white-space: nowrap;">{{ c.hero.stat2v }}</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: #79828c; margin-top: 7px; line-height: 1.35;">{{ c.hero.stat2l }}</div>
+          </div>
+          <div style="background: #0b0e13; padding: 14px 16px;">
+            <div style="font-weight: 800; font-size: clamp(15px, 3.4vw, 21px); line-height: 1.05; white-space: nowrap;">{{ c.hero.stat3v }}</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: #79828c; margin-top: 7px; line-height: 1.35;">{{ c.hero.stat3l }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- hero 3D viewport (mobile par hidden — showcase section mein valve dobara aata hai) -->
+      <div data-hero-3d="" style="position: relative; height: clamp(380px, 44vw, 470px); display: flex; align-items: center; justify-content: center;">
+        <div style="position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-top: 1px solid rgba(91,155,255,0.6); border-left: 1px solid rgba(91,155,255,0.6);"></div>
+        <div style="position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-top: 1px solid rgba(91,155,255,0.6); border-right: 1px solid rgba(91,155,255,0.6);"></div>
+        <div style="position: absolute; bottom: 8px; left: 8px; width: 26px; height: 26px; border-bottom: 1px solid rgba(91,155,255,0.6); border-left: 1px solid rgba(91,155,255,0.6);"></div>
+        <div style="position: absolute; bottom: 8px; right: 8px; width: 26px; height: 26px; border-bottom: 1px solid rgba(91,155,255,0.6); border-right: 1px solid rgba(91,155,255,0.6);"></div>
+        <div style="position: absolute; top: 16px; left: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #5b9bff;">{{ c.hero.partCode }}</div>
+        <div style="position: absolute; top: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #4a5260;">SECTION VIEW</div>
+        <span data-ph="" style="position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5e6b7a">[ hero-part.png ]</span>
+        <img src="hero-part.png" alt="Engine valve" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; box-sizing: border-box;">
+        <div style="position: absolute; right: 30px; top: 64px; bottom: 96px; width: 1px; background: rgba(91,155,255,0.45);">
+          <div style="position: absolute; top: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid rgba(91,155,255,0.8);"></div>
+          <div style="position: absolute; bottom: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid rgba(91,155,255,0.8);"></div>
+          <div style="position: absolute; top: 50%; left: -9px; transform: translateY(-50%); writing-mode: vertical-rl; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #5b9bff; background: #0b0e13; padding: 8px 0;">OAL · 90.0</div>
+        </div>
+        <div style="position: absolute; top: 110px; left: 14px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">Ø STEM · 5.0</span>
+          <span style="width: 44px; height: 1px; background: rgba(91,155,255,0.5);"></span>
+        </div>
+        <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #5b9bff; white-space: nowrap;">{{ c.hero.partLabel }}</div>
+        <div style="position: absolute; bottom: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #4a5260; display: none">NOT TO SCALE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PRODUCTS ═══════════ -->
+  <div id="products" data-screen-label="Products" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 01 — PRODUCTS</div>
+      <h2 style="margin: 12px 0 8px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.products.heading }}</h2>
+      <p style="margin: 0 0 34px; color: #9aa3ad; font-size: 16px; max-width: 560px;">{{ c.products.sub }}</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="3">
+        <div data-reveal="" style="position: relative; background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease;" style-hover="transform: translateY(-5px); border-color: rgba(91,155,255,0.5);">
+          <div data-ph-bg="" style="position: relative; height: 190px; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #5e6b7a; letter-spacing: 1px;">
+            <span data-ph="">{{ p.ph }}</span>
+            <img src="{{ p.img }}" alt="{{ p.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+            <span style="position: absolute; top: 12px; left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff; background: rgba(11,14,19,0.85); border: 1px solid rgba(91,155,255,0.35); padding: 4px 9px; border-radius: 5px;">{{ p.code }}</span>
+          </div>
+          <div style="padding: 20px 22px 22px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5b9bff; letter-spacing: 2px;">{{ p.num }}</div>
+            <div style="font-weight: 700; font-size: 18.5px; margin: 7px 0 7px;">{{ p.title }}</div>
+            <div style="color: #8b95a1; font-size: 14px; line-height: 1.6;">{{ p.desc }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ═══════════ 3D SHOWCASE ═══════════ -->
+  <div id="showcase" data-screen-label="3D Showcase" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 02 — SHOWCASE</div>
+      <h2 style="margin: 12px 0 8px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.showcase.heading }}</h2>
+      <p style="margin: 0 0 34px; color: #9aa3ad; font-size: 16px; max-width: 560px;">{{ c.showcase.sub }}</p>
+    </div>
+
+    <div data-sc-list="">
+      <sc-for list="{{ showcase }}" as="it" hint-placeholder-count="3">
+        <div data-reveal="" data-sc-panel="" style="display: grid; gap: 0; border: 1px solid #1f2733; border-radius: 16px; overflow: hidden; margin-bottom: 22px; background: #0e1319;">
+          <div style="padding: clamp(26px, 4vw, 44px); display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #5b9bff;">{{ it.num }}</div>
+            <h3 style="margin: 12px 0 12px; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -0.5px;">{{ it.title }}</h3>
+            <p style="margin: 0 0 26px; color: #9aa3ad; font-size: 15.5px; line-height: 1.7; text-wrap: pretty;">{{ it.desc }}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1f2733; border: 1px solid #1f2733; border-radius: 12px; overflow: hidden;">
+              <sc-for list="{{ it.specs }}" as="s" hint-placeholder-count="4">
+                <div style="background: #0e1319; padding: 14px 16px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #79828c;">{{ s.label }}</div><div style="font-weight: 700; font-size: 15px; margin-top: 6px;">{{ s.value }}</div></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="position: relative; min-height: 380px; background: #0e1319; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <div data-ph="" style="position: absolute; inset: 0; background-color: #0c1015; background-image: linear-gradient(rgba(91,155,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.045) 1px, transparent 1px); background-size: 42px 42px;"></div>
+            <div data-ph="" data-sc-code="" style="position: absolute; top: 14px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #5b9bff; z-index: 3;">{{ it.code }}</div>
+            <span data-ph="" style="position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5e6b7a;">{{ it.ph }}</span>
+            <img src="{{ it.img }}" alt="{{ it.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(0.94) brightness(0.94);">
+            <div style="{{ it.scrimStyle }}"></div>
+            <div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 110px 36px #0e1319;"></div>
+            <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #0e1319 0%, rgba(14,19,25,0.5) 10%, rgba(14,19,25,0) 30%, rgba(14,19,25,0) 70%, rgba(14,19,25,0.5) 90%, #0e1319 100%);"></div>
+            <div data-sc-code="" style="position: absolute; bottom: 14px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #6b7682; z-index: 3;">{{ it.code }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ═══════════ ABOUT ═══════════ -->
+  <div id="about" data-screen-label="About" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 34px; align-items: center;">
+      <div data-reveal="">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 03 — ABOUT</div>
+        <h2 style="margin: 12px 0 16px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.about.heading }}</h2>
+        <p style="margin: 0 0 16px; color: #9aa3ad; font-size: 16px; line-height: 1.7; text-wrap: pretty;">{{ c.about.body1 }}</p>
+        <p style="margin: 0 0 24px; color: #9aa3ad; font-size: 16px; line-height: 1.7; text-wrap: pretty;">{{ c.about.body2 }}</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #c8cfd8; border: 1px solid #2b3340; padding: 8px 14px; border-radius: 100px;">CASTING</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #c8cfd8; border: 1px solid #2b3340; padding: 8px 14px; border-radius: 100px;">CNC MACHINING</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #c8cfd8; border: 1px solid #2b3340; padding: 8px 14px; border-radius: 100px;">QUALITY TESTING</span>
+        </div>
+      </div>
+      <div data-reveal="" data-ph-bg="" style="position: relative; height: clamp(280px, 36vw, 380px); border-radius: 16px; overflow: hidden; border: 1px solid #1f2733; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #5e6b7a; letter-spacing: 1px;">
+        <span data-ph="">[ about-factory.jpg ]</span>
+        <img src="about-factory.jpg" alt="Alamza factory" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ QUALITY STRIP ═══════════ -->
+  <div data-screen-label="Quality" style="max-width: 1280px; margin: 0 auto; padding: clamp(48px, 6vw, 76px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff; margin-bottom: 22px;">// {{ c.quality.heading }}</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+      <div data-reveal="" style="display: flex; align-items: center; gap: 16px; background: #0e1319; border: 1px solid #1f2733; border-radius: 12px; padding: 18px;">
+        <div style="width: 64px; height: 64px; flex-shrink: 0; border: 1px solid rgba(91,155,255,0.5); background: rgba(91,155,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">{{ c.quality.b1t }}</span>
+          <span style="font-weight: 800; font-size: 19px;">{{ c.quality.b1v }}</span>
+        </div>
+        <span style="color: #9aa3ad; font-size: 14.5px;">{{ c.quality.b1d }}</span>
+      </div>
+      <div data-reveal="" style="display: flex; align-items: center; gap: 16px; background: #0e1319; border: 1px solid #1f2733; border-radius: 12px; padding: 18px;">
+        <div style="width: 64px; height: 64px; flex-shrink: 0; border: 1px solid rgba(91,155,255,0.5); background: rgba(91,155,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">{{ c.quality.b2t }}</span>
+          <span style="font-weight: 800; font-size: 19px;">{{ c.quality.b2v }}</span>
+        </div>
+        <span style="color: #9aa3ad; font-size: 14.5px;">{{ c.quality.b2d }}</span>
+      </div>
+      <div data-reveal="" style="display: flex; align-items: center; gap: 16px; background: #0e1319; border: 1px solid #1f2733; border-radius: 12px; padding: 18px;">
+        <div style="width: 64px; height: 64px; flex-shrink: 0; border: 1px solid rgba(91,155,255,0.5); background: rgba(91,155,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">{{ c.quality.b3t }}</span>
+          <span style="font-weight: 800; font-size: 19px;">{{ c.quality.b3v }}</span>
+        </div>
+        <span style="color: #9aa3ad; font-size: 14.5px;">{{ c.quality.b3d }}</span>
+      </div>
+      <div data-reveal="" style="display: flex; align-items: center; gap: 16px; background: #0e1319; border: 1px solid #1f2733; border-radius: 12px; padding: 18px;">
+        <div style="width: 64px; height: 64px; flex-shrink: 0; border: 1px solid rgba(91,155,255,0.5); background: rgba(91,155,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">{{ c.quality.b4t }}</span>
+          <span style="font-weight: 800; font-size: 19px;">{{ c.quality.b4v }}</span>
+        </div>
+        <span style="color: #9aa3ad; font-size: 14.5px;">{{ c.quality.b4d }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TEAM ═══════════ -->
+  <div id="team" data-screen-label="Team" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 04 — TEAM</div>
+      <h2 style="margin: 12px 0 8px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.team.heading }}</h2>
+      <p style="margin: 0 0 34px; color: #9aa3ad; font-size: 16px; max-width: 560px;">{{ c.team.sub }}</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px;">
+      <sc-for list="{{ team }}" as="m" hint-placeholder-count="4">
+        <div data-reveal="" style="background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+          <div data-ph-bg="" style="position: relative; aspect-ratio: 1 / 1.05; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5e6b7a;">
+            <span data-ph="">{{ m.ph }}</span>
+            <img src="{{ m.img }}" alt="{{ m.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="padding: 16px 18px 18px;">
+            <div style="font-weight: 700; font-size: 16.5px;">{{ m.name }}</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #5b9bff; margin-top: 5px;">{{ m.role }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ═══════════ GALLERY (auto-hides when no images) ═══════════ -->
+  <sc-if value="{{ hasGallery }}" hint-placeholder-val="{{ false }}">
+  <div id="gallery" data-screen-label="Gallery" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 05 — GALLERY</div>
+      <h2 style="margin: 12px 0 8px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.gallery.heading }}</h2>
+      <p style="margin: 0 0 34px; color: #9aa3ad; font-size: 16px; max-width: 560px;">{{ c.gallery.sub }}</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+      <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="3">
+        <div data-reveal="" data-ph-bg="" style="position: relative; height: 200px; border-radius: 12px; overflow: hidden; border: 1px solid #1f2733; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #5e6b7a;">
+          <span data-ph="">{{ g.ph }}</span>
+          <img src="{{ g.img }}" alt="{{ g.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ═══════════ LOCATION ═══════════ -->
+  <div id="location" data-screen-label="Location" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 06 — LOCATION</div>
+      <h2 style="margin: 12px 0 34px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">Find us</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: stretch;">
+      <div data-reveal="" style="border-radius: 14px; overflow: hidden; border: 1px solid #1f2733; min-height: 320px; background: #0f141b;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3432.488308921994!2d73.13108481428868!3d30.648375303809292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3922c929a1cf7b2b%3A0x2153d92aa7bea386!2sAlamza!5e0!3m2!1sen!2s!4v1781292369691!5m2!1sen!2s&amp;z=13&amp;output=embed" title="Alamza Industry location" loading="lazy" style="width: 100%; height: 100%; min-height: 320px; border: 0; display: block; filter: grayscale(0.25) invert(0.91) hue-rotate(185deg) contrast(0.92);"></iframe>
+      </div>
+      <div data-reveal="" style="background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 22px; justify-content: center;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">ADDRESS</div>
+          <div style="font-size: 16px; margin-top: 7px; line-height: 1.55; color: #e8eaed;">{{ c.contact.address }}</div>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">PHONE / WHATSAPP</div>
+          <a href="{{ telHref }}" style="display: inline-block; font-size: 19px; font-weight: 700; margin-top: 7px; color: #5b9bff; text-decoration: none;">{{ c.contact.phone }}</a>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">EMAIL</div>
+          <a href="{{ mailHref }}" style="display: inline-block; font-size: 15.5px; margin-top: 7px; color: #e8eaed; text-decoration: none; border-bottom: 1px solid #2b3340; padding-bottom: 2px; overflow-wrap: anywhere;">{{ c.contact.email }}</a>
+        </div>
+        <a href="{{ waHref }}" target="_blank" rel="noopener" style="align-self: flex-start; background: #1da851; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">Chat on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ CONTACT ═══════════ -->
+  <div id="contact" data-screen-label="Contact" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(24px, 5vw, 60px) 10px;">
+    <div style="background: linear-gradient(160deg, #10161f, #0d1117); border: 1px solid #1f2733; border-radius: 18px; padding: clamp(26px, 4vw, 48px)">
+      <div data-reveal="">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">// 07 — CONTACT</div>
+        <h2 style="margin: 12px 0 8px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.8px;">{{ c.contact.heading }}</h2>
+        <p style="margin: 0 0 30px; color: #9aa3ad; font-size: 16px; max-width: 560px;">{{ c.contact.sub }}</p>
+      </div>
+      <form onSubmit="{{ sendMsg }}" data-reveal="">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="cname" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">YOUR NAME <span style="color: #5b9bff;">*</span></label>
+            <input id="cname" name="cname" type="text" placeholder="Full name" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="cphone" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">PHONE / WHATSAPP</label>
+            <input id="cphone" name="cphone" type="tel" placeholder="03xx-xxxxxxx" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="cemail" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">EMAIL</label>
+            <input id="cemail" name="cemail" type="email" placeholder="you@email.com" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px;">
+          <label for="cmsg" style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">WHAT DO YOU NEED? <span style="color: #5b9bff;">*</span></label>
+          <textarea id="cmsg" name="cmsg" rows="5" placeholder="e.g. 200 cylinder sleeves, 53 mm bore…" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; resize: vertical; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;"></textarea>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+          <button type="submit" disabled="{{ sending }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">Send Message</button>
+          <span style="color: #9aa3ad; font-size: 14px;">{{ msgStatus }}</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ INTERN PORTAL ═══════════ -->
+  <div id="interns" data-screen-label="Intern Portal" style="scroll-margin-top: 70px; max-width: 1280px; margin: 0 auto; padding: clamp(48px, 6vw, 70px) clamp(24px, 5vw, 60px) 10px;">
+    <div data-reveal="" style="position: relative; background: #0e1319; border: 1px solid #1f2733; border-radius: 18px; padding: clamp(26px, 4.5vw, 52px); max-width: 880px; margin: 0 auto">
+      <div style="position: absolute; top: 10px; left: 10px; width: 22px; height: 22px; border-top: 1px solid rgba(91,155,255,0.55); border-left: 1px solid rgba(91,155,255,0.55);"></div>
+      <div style="position: absolute; bottom: 10px; right: 10px; width: 22px; height: 22px; border-bottom: 1px solid rgba(91,155,255,0.55); border-right: 1px solid rgba(91,155,255,0.55);"></div>
+
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2.5px; color: #5b9bff;">{{ c.intern.code }}</div>
+      <h2 style="margin: 14px 0 10px; font-size: clamp(26px, 3.2vw, 38px); font-weight: 800; letter-spacing: -0.8px;">{{ c.intern.title }}</h2>
+      <p style="margin: 0 0 8px; color: #9aa3ad; font-size: 15px;">{{ c.intern.sub }}</p>
+      <div style="height: 1px; background: #1a212b; margin: 26px 0 30px;"></div>
+
+      <form onSubmit="{{ submitIntern }}">
+
+        <!-- A · PERSONAL -->
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 3px; color: #79828c;">A · PERSONAL</span>
+          <span style="flex: 1; height: 1px; background: #1a212b;"></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px;">
+          <label for="iname" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">01</span> {{ fld.name.label }} {{ fld.name.mark }}</label>
+          <input id="iname" name="iname" type="text" placeholder="{{ fld.name.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="iemail" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">02</span> {{ fld.email.label }} {{ fld.email.mark }}</label>
+            <input id="iemail" name="iemail" type="email" placeholder="{{ fld.email.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="iphone" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">03</span> {{ fld.phone.label }} {{ fld.phone.mark }}</label>
+            <input id="iphone" name="iphone" type="tel" placeholder="{{ fld.phone.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="icnic" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">04</span> {{ fld.cnic.label }} {{ fld.cnic.mark }}</label>
+            <input id="icnic" name="icnic" type="text" placeholder="{{ fld.cnic.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="icity" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">05</span> {{ fld.city.label }} {{ fld.city.mark }}</label>
+            <input id="icity" name="icity" type="text" placeholder="{{ fld.city.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+        </div>
+
+        <!-- B · INTERNSHIP -->
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 3px; color: #79828c;">B · INTERNSHIP</span>
+          <span style="flex: 1; height: 1px; background: #1a212b;"></span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="iinst" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">06</span> {{ fld.institute.label }} {{ fld.institute.mark }}</label>
+            <input id="iinst" name="iinst" type="text" placeholder="{{ fld.institute.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="ifield" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">07</span> {{ fld.field.label }} {{ fld.field.mark }}</label>
+            <input id="ifield" name="ifield" type="text" placeholder="{{ fld.field.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="idept" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">08</span> {{ fld.dept.label }} {{ fld.dept.mark }}</label>
+            <select id="idept" name="idept" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box; appearance: none;" style-focus="border-color: #5b9bff;">
+              <option value="">{{ fld.dept.ph }}</option>
+              <sc-for list="{{ departments }}" as="d" hint-placeholder-count="5">
+                <option value="{{ d }}">{{ d }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <label for="idur" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">09</span> {{ fld.duration.label }} {{ fld.duration.mark }}</label>
+            <input id="idur" name="idur" type="text" placeholder="{{ fld.duration.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px;">
+          <label for="isup" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">10</span> {{ fld.supervisor.label }} {{ fld.supervisor.mark }}</label>
+          <input id="isup" name="isup" type="text" placeholder="{{ fld.supervisor.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+        </div>
+
+        <!-- C · WORK UPLOAD -->
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 3px; color: #79828c;">C · WORK UPLOAD</span>
+          <span style="flex: 1; height: 1px; background: #1a212b;"></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px;">
+          <label for="inote" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">11</span> {{ fld.note.label }} {{ fld.note.mark }}</label>
+          <textarea id="inote" name="inote" rows="3" placeholder="{{ fld.note.ph }}" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; resize: vertical; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;"></textarea>
+        </div>
+        <sc-if value="{{ showUpload }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px;">
+            <label style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">12</span> {{ uploadLabel }} <span style="color: #5e6b7a; letter-spacing: 1px;">{{ uploadHint }}</span></label>
+            {{ uploadZone }}
+          </div>
+        </sc-if>
+        <sc-if value="{{ showUrls }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px;">
+            <label style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #c8cfd8;"><span style="color: #4a5260;">{{ urlNum }}</span> {{ urlsLabel }} <span style="color: #5e6b7a; letter-spacing: 1px;">{{ urlsHint }}</span></label>
+            {{ urlZone }}
+          </div>
+        </sc-if>
+
+        <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+          <button type="submit" disabled="{{ uploading }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">{{ submitText }}</button>
+          <span style="color: #9aa3ad; font-size: 13.5px;">{{ upStatus }}</span>
+        </div>
+        <sc-if value="{{ uploading }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 16px; height: 6px; border-radius: 100px; background: #1a212b; overflow: hidden; max-width: 460px;">
+            <div style="height: 100%; border-radius: 100px; background: linear-gradient(90deg, #5b9bff, #2563eb); width: {{ upPctW }}; transition: width 0.3s ease;"></div>
+          </div>
+        </sc-if>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <div style="max-width: 1280px; margin: 0 auto; padding: clamp(48px, 6vw, 70px) clamp(24px, 5vw, 60px) 104px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid #1a212b;">
+      <div>
+        <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 17px;">{{ c.brand.name }} <span style="color: #5b9bff;">{{ c.brand.nameAccent }}</span></div>
+        <div style="color: #79828c; font-size: 13.5px; margin-top: 8px; max-width: 320px;">{{ c.brand.footerNote }}</div>
+      </div>
+      <div style="display: flex; gap: 22px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; flex-wrap: wrap;">
+        <a href="#products" style="color: #9aa3ad; text-decoration: none;">PRODUCTS</a>
+        <a href="#team" style="color: #9aa3ad; text-decoration: none;">TEAM</a>
+        <a href="#interns" style="color: #9aa3ad; text-decoration: none;">INTERN PORTAL</a>
+        <a href="#contact" style="color: #9aa3ad; text-decoration: none;">CONTACT</a>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; padding-top: 22px;">
+      <div style="color: #5e6b7a; font-size: 12.5px;">© 2026 Alamza Industry — Sahiwal, Pakistan</div>
+      <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c;">FOLLOW</span>
+        {{ socialRow }}
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp floating button -->
+  <a href="{{ waHref }}" target="_blank" rel="noopener" style="position: fixed; bottom: 20px; right: 20px; z-index: 80; background: #1da851; color: #fff; font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; padding: 14px 22px; border-radius: 100px; text-decoration: none; box-shadow: 0 12px 30px rgba(0,0,0,0.45); display: flex; align-items: center; gap: 9px; transition: transform 0.2s ease;" style-hover="transform: translateY(-3px);">
+    <span style="width: 9px; height: 9px; border-radius: 50%; background: #b8f5cf; flex-shrink: 0;"></span>
+    <span>WhatsApp</span>
+  </a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    navOpen: false,
+    msgStatus: "", sending: false,
+    upStatus: "", upPct: 0, uploading: false,
+    pickedFiles: [], dragActive: false,
+    urls: [""]
+  };
+
+  pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  fieldMark(req) {
+    return req
+      ? React.createElement("span", { style: { color: "#5b9bff" } }, "*")
+      : React.createElement("span", { style: { color: "#5e6b7a", letterSpacing: "1px" } }, "(OPTIONAL)");
+  }
+
+  // ── URL link inputs (shown when file upload is disabled or links enabled) ──
+  setUrl = (i, val) => {
+    var urls = (this.state.urls || [""]).slice();
+    urls[i] = val;
+    this.setState({ urls: urls });
+  };
+  addUrl = () => {
+    var urls = (this.state.urls || [""]).slice();
+    if (urls.length >= 10) return;
+    urls.push("");
+    this.setState({ urls: urls });
+  };
+  removeUrl = (i) => {
+    var urls = (this.state.urls || [""]).slice();
+    urls.splice(i, 1);
+    if (!urls.length) urls = [""];
+    this.setState({ urls: urls });
+  };
+
+  buildUrlInputs() {
+    var self = this;
+    var urls = (this.state.urls && this.state.urls.length) ? this.state.urls : [""];
+    var ph = (window.SITE_DATA && window.SITE_DATA.intern && window.SITE_DATA.intern.urlPlaceholder) || "https://...";
+    var rows = urls.map(function (u, i) {
+      var input = React.createElement("input", {
+        type: "url", value: u, placeholder: ph,
+        onChange: function (e) { self.setUrl(i, e.target.value); },
+        style: { flex: 1, minWidth: 0, background: "#0b1016", border: "1px solid #232b36", borderRadius: "8px", padding: "12px 14px", color: "#e8eaed", fontFamily: "Archivo, sans-serif", fontSize: "14px", outline: "none" }
+      });
+      var rm = urls.length > 1 ? React.createElement("button", {
+        type: "button", "aria-label": "Remove link",
+        onClick: function () { self.removeUrl(i); },
+        style: { flexShrink: 0, width: "40px", height: "42px", borderRadius: "8px", border: "1px solid #232b36", background: "transparent", color: "#79828c", cursor: "pointer", fontSize: "18px", lineHeight: 1 }
+      }, "\u00d7") : null;
+      return React.createElement("div", { key: "r" + i, style: { display: "flex", gap: "8px", alignItems: "center" } }, input, rm);
+    });
+    var add = React.createElement("button", {
+      type: "button", onClick: this.addUrl,
+      style: { alignSelf: "flex-start", background: "transparent", border: "1px dashed #2b3340", color: "#5b9bff", fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: "1px", padding: "9px 14px", borderRadius: "8px", cursor: "pointer", marginTop: "2px" }
+    }, "+ ADD ANOTHER LINK");
+    return React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } }, rows, add);
+  }
+
+  buildFields(c) {
+    var conf = (c.intern && c.intern.fields) || {};
+    var self = this;
+    var keys = ["name", "email", "phone", "cnic", "city", "institute", "field", "dept", "duration", "supervisor", "note"];
+    var out = {};
+    keys.forEach(function (k) {
+      var f = conf[k] || {};
+      out[k] = {
+        label: f.label || k.toUpperCase(),
+        ph: f.placeholder || "",
+        req: !!f.required,
+        mark: self.fieldMark(!!f.required)
+      };
+    });
+    return out;
+  }
+
+  buildShowcase(c) {
+    var self = this;
+    var items = (c.showcase && c.showcase.items) || [];
+    return items.map(function (it, i) {
+      var g = (typeof it.gradientOpacity === "number") ? it.gradientOpacity : 0.45;
+      g = Math.max(0, Math.min(1, g));
+      return {
+        num: self.pad2(i + 1),
+        code: it.code || "",
+        title: it.title || "",
+        desc: it.desc || "",
+        img: it.img || "",
+        ph: "[ " + (it.img || "image") + " ]",
+        specs: (it.specs || []).map(function (s) { return { label: s.label || "", value: s.value || "" }; }),
+        scrimStyle: {
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "linear-gradient(135deg, rgba(13,17,23," + (g * 0.62).toFixed(3) + "), rgba(13,17,23," + g.toFixed(3) + "))"
+        }
+      };
+    });
+  }
+
+  componentDidMount() {
+    // Image loaded  -> hide its placeholders ([data-ph]) + striped/grid bg ([data-ph-bg]) so nothing shows through transparent PNGs.
+    // Image missing -> hide the <img> so the placeholder stays visible.
+    var settle = function (img) {
+      if (!img || img.tagName !== "IMG" || !img.complete) return;
+      var box = img.parentElement;
+      if (!box) return;
+      var phs = box.querySelectorAll("[data-ph]");
+      if (img.naturalWidth > 0) {
+        img.style.display = "";
+        phs.forEach(function (e) { e.style.display = "none"; });
+        if (box.hasAttribute("data-ph-bg")) box.style.backgroundImage = "none";
+      } else if (img.getAttribute("src")) {
+        img.style.display = "none";
+        phs.forEach(function (e) { e.style.display = ""; });
+      }
+    };
+    var self = this;
+    document.addEventListener("load", function (e) { if (e.target && e.target.tagName === "IMG") { settle(e.target); if (self._checkGallery) setTimeout(self._checkGallery, 30); } }, true);
+    document.addEventListener("error", function (e) { if (e.target && e.target.tagName === "IMG") { settle(e.target); if (self._checkGallery) setTimeout(self._checkGallery, 30); } }, true);
+    // Gallery: agar JSON me filenames hain par koi image load na ho, to poora gallery section + nav links chhupa do.
+    var checkGallery = this._checkGallery = function () {
+      var sec = document.getElementById("gallery");
+      if (!sec) return;
+      var imgs = sec.querySelectorAll("img");
+      if (!imgs.length) return;
+      var loaded = 0, pending = 0;
+      imgs.forEach(function (im) {
+        if (!im.complete) pending++;
+        else if (im.naturalWidth > 0) loaded++;
+      });
+      if (pending > 0) return; // abhi load ho rahi hain — wait
+      var hide = loaded === 0;
+      sec.style.display = hide ? "none" : "";
+      document.querySelectorAll('a[href="#gallery"]').forEach(function (a) { a.style.display = hide ? "none" : ""; });
+    };
+
+    var sweep = function () { document.querySelectorAll("img").forEach(settle); checkGallery(); };
+    sweep();
+    setTimeout(sweep, 400);
+    setTimeout(sweep, 1500);
+    setTimeout(sweep, 3000);
+    this.initReveal();
+    // site-data.json load hone par website ko dobara render karein
+    if (!window.SITE_DATA_READY) {
+      this._onData = () => { this.forceUpdate(); if (this._checkGallery) { setTimeout(this._checkGallery, 80); setTimeout(this._checkGallery, 1200); } };
+      window.addEventListener("sitedata", this._onData);
+    }
+    // Firebase background mein load hota hai — pehla paint static hai, full speed
+    if (window.ALAMZA) window.ALAMZA.ensureFirebase().then((fb) => { this.fb = fb; });
+  }
+
+  initReveal() {
+    setTimeout(function () {
+      var els = document.querySelectorAll("[data-reveal]");
+      if (!("IntersectionObserver" in window)) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.style.opacity = "1";
+            en.target.style.transform = "translateY(0px)";
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.9) return;
+        el.style.opacity = "0";
+        el.style.transform = "translateY(26px)";
+        el.style.transition = "opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1)";
+        io.observe(el);
+      });
+    }, 120);
+  }
+
+  toggleNav = () => this.setState({ navOpen: !this.state.navOpen });
+  closeNav = () => this.setState({ navOpen: false });
+
+  sendMsg = (e) => {
+    e.preventDefault();
+    var self = this, f = e.target;
+    var data = {
+      name: f.cname.value.trim(),
+      phone: f.cphone.value.trim(),
+      email: f.cemail.value.trim(),
+      message: f.cmsg.value.trim()
+    };
+    if (!data.name || !data.message) {
+      this.setState({ msgStatus: "Please enter your name and message." });
+      return;
+    }
+    this.setState({ sending: true, msgStatus: "Sending\u2026" });
+    window.ALAMZA.ensureFirebase().then(function (fb) {
+      if (!fb) {
+        self.setState({ sending: false, msgStatus: "Form is offline right now \u2014 please call or WhatsApp us." });
+        return;
+      }
+      fb.database().ref("contactMessages").push(
+        Object.assign({}, data, { ts: Date.now(), read: false })
+      ).then(function () {
+        f.reset();
+        self.setState({ sending: false, msgStatus: "Message sent \u2014 we will get back to you shortly." });
+      }).catch(function () {
+        self.setState({ sending: false, msgStatus: "Could not send right now \u2014 please WhatsApp us instead." });
+      });
+    });
+  };
+
+  submitIntern = (e) => {
+    e.preventDefault();
+    var self = this, f = e.target;
+    var c = window.SITE_DATA || {};
+    var intern = c.intern || {};
+    var fieldsConf = intern.fields || {};
+    var uploadEnabled = intern.uploadEnabled !== false;   // default ON
+    var urlsEnabled = !!intern.urlsEnabled;               // default OFF
+
+    var nameMap = { name: "iname", email: "iemail", phone: "iphone", cnic: "icnic", city: "icity", institute: "iinst", field: "ifield", dept: "idept", duration: "idur", supervisor: "isup", note: "inote" };
+    var order = ["name", "email", "phone", "cnic", "city", "institute", "field", "dept", "duration", "supervisor", "note"];
+    var data = {};
+    order.forEach(function (k) { var el = f[nameMap[k]]; data[k] = el ? String(el.value || "").trim() : ""; });
+
+    // Required validation — driven entirely by site-data.json
+    for (var oi = 0; oi < order.length; oi++) {
+      var k = order[oi];
+      var conf = fieldsConf[k] || {};
+      if (conf.required && !data[k]) {
+        var lbl = conf.label || k.toUpperCase();
+        this.setState({ upStatus: "Please fill in: " + lbl + "." });
+        return;
+      }
+    }
+    if (data.email && data.email.indexOf("@") === -1) {
+      this.setState({ upStatus: "Please enter a valid email address." });
+      return;
+    }
+
+    var MAX_FILE = 30 * 1024 * 1024;
+    var MAX_TOTAL = 100 * 1024 * 1024;
+    var files = (uploadEnabled && f.ifiles) ? Array.prototype.slice.call(f.ifiles.files) : [];
+    var urls = urlsEnabled ? (this.state.urls || []).map(function (s) { return String(s || "").trim(); }).filter(Boolean) : [];
+
+    for (var i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE) {
+        this.setState({ upStatus: "\u201C" + files[i].name + "\u201D is over 30 MB \u2014 not allowed." });
+        return;
+      }
+    }
+
+    this.setState({ uploading: true, upStatus: files.length ? "Checking storage\u2026" : "Submitting\u2026", upPct: 0 });
+    window.ALAMZA.ensureFirebase().then(function (fb) {
+      if (!fb) {
+        self.setState({ uploading: false, upStatus: "Submissions are offline right now \u2014 please contact the admin." });
+        return;
+      }
+
+      var saveRecord = function (uploaded, adding) {
+        fb.database().ref("internSubmissions").push(
+          Object.assign({}, data, { files: uploaded, links: urls, totalSize: adding, ts: Date.now() })
+        ).then(function () {
+          f.reset();
+          self.setState({ uploading: false, upPct: 100, upStatus: "Submitted \u2014 thank you, " + (data.name || "") + "!", pickedFiles: [], urls: [""] });
+        }).catch(function () {
+          self.setState({ uploading: false, upStatus: "Could not save your details \u2014 please try again." });
+        });
+      };
+
+      if (!files.length) { saveRecord([], 0); return; }
+
+      fb.database().ref("internSubmissions").once("value").then(function (snap) {
+        var used = 0, v = snap.val() || {};
+        Object.keys(v).forEach(function (k) { used += (v[k].totalSize || 0); });
+        var adding = files.reduce(function (s, x) { return s + x.size; }, 0);
+        if (used + adding > MAX_TOTAL) {
+          self.setState({ uploading: false, upStatus: "Total storage limit (100 MB) reached \u2014 please contact the admin." });
+          return;
+        }
+        var uploaded = [];
+        var idx = 0;
+        var next = function () {
+          if (idx >= files.length) { saveRecord(uploaded, adding); return; }
+          var file = files[idx];
+          var path = "intern-uploads/" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+          var task = fb.storage().ref(path).put(file);
+          task.on("state_changed", function (s) {
+            var pct = Math.round(((idx + (s.bytesTransferred / s.totalBytes)) / files.length) * 100);
+            self.setState({ upPct: pct, upStatus: "Uploading " + file.name + " (" + (idx + 1) + "/" + files.length + ")\u2026" });
+          }, function () {
+            self.setState({ uploading: false, upStatus: "Upload failed for " + file.name + " \u2014 please try again." });
+          }, function () {
+            task.snapshot.ref.getDownloadURL().then(function (url) {
+              uploaded.push({ fileName: file.name, size: file.size, url: url, path: path });
+              idx++;
+              next();
+            });
+          });
+        };
+        next();
+      });
+    });
+  };
+
+  // ════════ Professional file upload zone ════════
+  openFilePicker = () => { if (this._fileInput) this._fileInput.click(); };
+  onFilesChange = () => this.refreshPicked();
+  refreshPicked = () => {
+    var files = this._fileInput ? Array.prototype.slice.call(this._fileInput.files) : [];
+    var MAX = 30 * 1024 * 1024;
+    this.setState({ pickedFiles: files.map(function (f) { return { name: f.name, size: f.size, big: f.size > MAX }; }) });
+  };
+  onDragOver = (e) => { e.preventDefault(); if (!this.state.dragActive) this.setState({ dragActive: true }); };
+  onDragLeave = (e) => { e.preventDefault(); this.setState({ dragActive: false }); };
+  onDrop = (e) => {
+    e.preventDefault();
+    this.setState({ dragActive: false });
+    if (!this._fileInput || !e.dataTransfer || !e.dataTransfer.files || !e.dataTransfer.files.length) return;
+    try { this._fileInput.files = e.dataTransfer.files; } catch (err) {}
+    this.refreshPicked();
+  };
+  removeFile = (idx) => {
+    if (!this._fileInput || typeof DataTransfer === "undefined") return;
+    var dt = new DataTransfer();
+    Array.prototype.slice.call(this._fileInput.files).forEach(function (f, i) { if (i !== idx) dt.items.add(f); });
+    this._fileInput.files = dt.files;
+    this.refreshPicked();
+  };
+  fmtSize(n) {
+    if (n < 1024) return n + " B";
+    if (n < 1048576) return (n / 1024).toFixed(0) + " KB";
+    return (n / 1048576).toFixed(1) + " MB";
+  }
+
+  buildUploadZone() {
+    var self = this;
+    var active = this.state.dragActive;
+    var picked = this.state.pickedFiles || [];
+
+    var input = React.createElement("input", {
+      id: "ifiles", name: "ifiles", type: "file", multiple: true,
+      ref: function (el) { self._fileInput = el; },
+      onChange: this.onFilesChange,
+      style: { position: "absolute", width: "1px", height: "1px", opacity: 0, pointerEvents: "none" }
+    });
+
+    var arrow = React.createElement("svg", { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+      React.createElement("path", { d: "M12 16V4" }),
+      React.createElement("path", { d: "M7 9l5-5 5 5" }),
+      React.createElement("path", { d: "M4 17v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1" }));
+
+    var badge = React.createElement("div", {
+      style: { width: "48px", height: "48px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "#5b9bff", background: "rgba(91,155,255,0.12)", border: "1px solid rgba(91,155,255,0.3)", flexShrink: 0 }
+    }, arrow);
+
+    var heading = React.createElement("div", { style: { fontWeight: 700, fontSize: "15.5px", color: "#e8eaed" } },
+      "Drag & drop your files here");
+    var browse = React.createElement("span", {
+      style: { color: "#5b9bff", fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "3px" }
+    }, "browse from your device");
+    var subline = React.createElement("div", { style: { fontSize: "13.5px", color: "#8b95a1", marginTop: "2px" } }, ["or ", browse]);
+    var hint = React.createElement("div", {
+      style: { fontFamily: "'JetBrains Mono', monospace", fontSize: "10.5px", letterSpacing: "1.5px", color: "#5e6b7a", marginTop: "10px" }
+    }, "PDF · DOC · JPG · PNG · ZIP — UP TO 30 MB EACH");
+
+    var zone = React.createElement("div", {
+      onClick: this.openFilePicker, onDragOver: this.onDragOver, onDragLeave: this.onDragLeave, onDrop: this.onDrop,
+      role: "button", tabIndex: 0,
+      style: {
+        border: "1.5px dashed " + (active ? "#5b9bff" : "#2b3340"),
+        background: active ? "rgba(91,155,255,0.07)" : "#0b1016",
+        borderRadius: "14px", padding: "30px 22px", display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: "12px", cursor: "pointer",
+        textAlign: "center", transition: "border-color .2s ease, background .2s ease", outline: "none"
+      }
+    }, badge, React.createElement("div", null, heading, subline, hint), input);
+
+    var rows = picked.map(function (f, i) {
+      var doc = React.createElement("svg", { width: 16, height: 16, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round", style: { color: f.big ? "#e0876f" : "#5b9bff", flexShrink: 0 } },
+        React.createElement("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
+        React.createElement("path", { d: "M14 2v6h6" }));
+      var meta = React.createElement("div", { style: { display: "flex", flexDirection: "column", minWidth: 0, flex: 1 } },
+        React.createElement("span", { style: { fontSize: "13.5px", color: "#e8eaed", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, f.name),
+        React.createElement("span", { style: { fontFamily: "'JetBrains Mono', monospace", fontSize: "10.5px", color: f.big ? "#e0876f" : "#79828c", marginTop: "2px" } }, self.fmtSize(f.size) + (f.big ? " · OVER 30 MB" : "")));
+      var rm = React.createElement("button", {
+        type: "button",
+        onClick: function (e) { e.stopPropagation(); self.removeFile(i); },
+        "aria-label": "Remove file",
+        style: { flexShrink: 0, width: "28px", height: "28px", borderRadius: "8px", border: "1px solid #232b36", background: "transparent", color: "#79828c", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", lineHeight: 1, transition: "color .15s ease, border-color .15s ease" },
+        onMouseEnter: function (e) { e.currentTarget.style.color = "#e0876f"; e.currentTarget.style.borderColor = "rgba(224,135,111,0.5)"; },
+        onMouseLeave: function (e) { e.currentTarget.style.color = "#79828c"; e.currentTarget.style.borderColor = "#232b36"; }
+      }, "\u00d7");
+      return React.createElement("div", {
+        key: f.name + i,
+        style: { display: "flex", alignItems: "center", gap: "12px", padding: "10px 12px", background: "#0f141b", border: "1px solid " + (f.big ? "rgba(224,135,111,0.4)" : "#1f2733"), borderRadius: "10px" }
+      }, doc, meta, rm);
+    });
+
+    var list = picked.length
+      ? React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" } },
+          React.createElement("div", { style: { fontFamily: "'JetBrains Mono', monospace", fontSize: "10.5px", letterSpacing: "1.5px", color: "#79828c" } }, picked.length + (picked.length === 1 ? " FILE SELECTED" : " FILES SELECTED")),
+          rows)
+      : null;
+
+    return React.createElement("div", null, zone, list);
+  }
+
+  // ════════ Footer social icons (JSON-driven) ════════
+  socialIcon(name) {
+    var P = function (d) { return React.createElement("path", { d: d, fill: "currentColor" }); };
+    var v = { width: 23, height: 23, viewBox: "0 0 24 24", "aria-hidden": "true" };
+    if (name === "facebook")
+      return React.createElement("svg", v, P("M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.91h-2.33V22c4.78-.79 8.44-4.94 8.44-9.94z"));
+    if (name === "instagram")
+      return React.createElement("svg", v,
+        React.createElement("rect", { x: 3, y: 3, width: 18, height: 18, rx: 5, ry: 5, fill: "none", stroke: "currentColor", strokeWidth: 1.8 }),
+        React.createElement("circle", { cx: 12, cy: 12, r: 4, fill: "none", stroke: "currentColor", strokeWidth: 1.8 }),
+        React.createElement("circle", { cx: 17.4, cy: 6.6, r: 1.2, fill: "currentColor" }));
+    if (name === "youtube")
+      return React.createElement("svg", v,
+        P("M23 12s0-3.9-.5-5.6c-.27-1-1.06-1.78-2.06-2.05C18.65 4 12 4 12 4s-6.65 0-8.44.35c-1 .27-1.79 1.05-2.06 2.05C1 8.1 1 12 1 12s0 3.9.5 5.6c.27 1 1.06 1.78 2.06 2.05C5.35 20 12 20 12 20s6.65 0 8.44-.35c1-.27 1.79-1.05 2.06-2.05.5-1.7.5-5.6.5-5.6z"),
+        React.createElement("path", { d: "M10 15.5l5-3.5-5-3.5z", fill: "#0f141b" }));
+    if (name === "tiktok")
+      return React.createElement("svg", v, P("M16.6 5.82A4.28 4.28 0 0 1 15.27 3h-2.93v11.67a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .73-5.07V9.1a5.5 5.5 0 0 0-.73-.05A5.55 5.55 0 1 0 15.2 14.6V8.84a7.27 7.27 0 0 0 4.25 1.36V7.27a4.28 4.28 0 0 1-2.85-1.45z"));
+    if (name === "linkedin")
+      return React.createElement("svg", v, P("M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 9.5H5.67v8.16h2.67V9.5zM7 5.5a1.55 1.55 0 1 0 0 3.1 1.55 1.55 0 0 0 0-3.1zm11.34 7.63c0-2.32-1.24-3.4-2.9-3.4-1.34 0-1.94.74-2.27 1.26v-1.08h-2.67v8.16h2.67v-4.55c0-.24.02-.48.09-.65.19-.48.63-.98 1.36-.98.96 0 1.35.73 1.35 1.8v4.38h2.67l-.01-4.94z"));
+    // whatsapp
+    return React.createElement("svg", v, P("M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.5a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.96-3.48-.22-.36a9.42 9.42 0 0 1-1.45-5.02c0-5.2 4.24-9.43 9.46-9.43a9.4 9.4 0 0 1 6.67 2.77 9.36 9.36 0 0 1 2.76 6.67c0 5.2-4.24 9.43-9.46 9.43z"));
+  }
+
+  buildSocial(c) {
+    var social = (c && c.social) || {};
+    var wa = (c && c.contact && c.contact.whatsapp) ? c.contact.whatsapp : "";
+    var items = [];
+    if (wa) items.push({ name: "whatsapp", href: "https://wa.me/" + wa, label: "WhatsApp" });
+    [["facebook", "Facebook"], ["instagram", "Instagram"], ["youtube", "YouTube"], ["tiktok", "TikTok"], ["linkedin", "LinkedIn"]].forEach(function (pair) {
+      var val = social[pair[0]];
+      if (val && String(val).trim()) items.push({ name: pair[0], href: val, label: pair[1] });
+    });
+    var self = this;
+    var enter = function (e) { e.currentTarget.style.color = "#5b9bff"; e.currentTarget.style.borderColor = "rgba(91,155,255,0.5)"; e.currentTarget.style.background = "rgba(91,155,255,0.09)"; e.currentTarget.style.transform = "translateY(-2px)"; };
+    var leave = function (e) { e.currentTarget.style.color = "#9aa3ad"; e.currentTarget.style.borderColor = "#232b36"; e.currentTarget.style.background = "#0f141b"; e.currentTarget.style.transform = "none"; };
+    var links = items.map(function (it) {
+      return React.createElement("a", {
+        key: it.name, href: it.href, target: "_blank", rel: "noopener", title: it.label, "aria-label": it.label,
+        onMouseEnter: enter, onMouseLeave: leave,
+        style: { width: "46px", height: "46px", borderRadius: "12px", border: "1px solid #232b36", background: "#0f141b", color: "#9aa3ad", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", transition: "color .2s ease, border-color .2s ease, transform .2s ease, background .2s ease" }
+      }, self.socialIcon(it.name));
+    });
+    return React.createElement("div", { style: { display: "flex", gap: "10px", flexWrap: "wrap" } }, links);
+  }
+
+  renderVals() {
+    var self = this;
+    var c = window.SITE_DATA || {};
+    var wa = (c.contact && c.contact.whatsapp) ? c.contact.whatsapp : "";
+    var intern = c.intern || {};
+
+    var products = ((c.products && c.products.items) || []).map(function (p, i) {
+      return { code: p.code || "", title: p.title || "", desc: p.desc || "", img: p.img || "", num: self.pad2(i + 1), ph: "[ " + (p.img || "image") + " ]" };
+    });
+    var team = ((c.team && c.team.members) || []).map(function (m) {
+      return { name: m.name || "", role: m.role || "", img: m.img || "", alt: m.alt || (m.name || "Team member"), ph: "[ " + (m.img || "photo") + " ]" };
+    });
+    var gallery = ((c.gallery && c.gallery.images) || []).map(function (g) {
+      return { img: g.img || "", alt: g.alt || "Gallery image", ph: "[ " + (g.img || "image") + " ]" };
+    });
+
+    var uploadEnabled = intern.uploadEnabled !== false;
+    var urlsEnabled = !!intern.urlsEnabled;
+
+    return {
+      c: c,
+      products: products,
+      showcase: this.buildShowcase(c),
+      team: team,
+      gallery: gallery,
+      hasGallery: gallery.length > 0,
+      departments: (intern.departments || []),
+      fld: this.buildFields(c),
+      showUpload: uploadEnabled,
+      showUrls: urlsEnabled,
+      uploadLabel: intern.uploadLabel || "FILES",
+      uploadHint: intern.uploadHint || "(MAX 30 MB EACH)",
+      urlsLabel: intern.urlsLabel || "WORK LINKS",
+      urlsHint: intern.urlsHint || "",
+      urlNum: uploadEnabled ? "13" : "12",
+      submitText: intern.submitText || "Submit Application",
+      urlZone: this.buildUrlInputs(),
+      socialRow: this.buildSocial(c),
+      uploadZone: this.buildUploadZone(),
+      navOpen: this.state.navOpen,
+      toggleNav: this.toggleNav,
+      closeNav: this.closeNav,
+      sendMsg: this.sendMsg,
+      submitIntern: this.submitIntern,
+      msgStatus: this.state.msgStatus,
+      sending: this.state.sending,
+      upStatus: this.state.upStatus,
+      uploading: this.state.uploading,
+      upPctW: this.state.upPct + "%",
+      waHref: "https://wa.me/" + wa,
+      telHref: "tel:" + ((c.contact && c.contact.phone) ? c.contact.phone.replace(/[^0-9+]/g, "") : ""),
+      mailHref: "mailto:" + ((c.contact && c.contact.email) ? c.contact.email : "")
+    };
+  }
+}
+</script>
+</body>
+</html>

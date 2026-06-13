@@ -1,0 +1,161 @@
+{
+  "brand": {
+    "name": "ALAMZA",
+    "nameAccent": "INDUSTRY",
+    "footerNote": "Precision manufacturing from Sahiwal, Pakistan."
+  },
+
+  "hero": {
+    "eyebrow": "SAHIWAL BYPASS · PUNJAB · PAKISTAN",
+    "title": "FORGED IN SAHIWAL.",
+    "sub": "Motorcycle parts, CNC machines and cylinder sleeves — manufactured in-house at our Sahiwal facility with uncompromising precision.",
+    "ctaPrimary": "Explore Products",
+    "ctaSecondary": "WhatsApp Us",
+    "partCode": "AL-VLV-001",
+    "partLabel": "ENGINE VALVE · ALLOY STEEL",
+    "stat1v": "3", "stat1l": "PRODUCT LINES",
+    "stat2v": "In-house", "stat2l": "CNC MACHINING",
+    "stat3v": "Sahiwal", "stat3l": "PAKISTAN"
+  },
+
+  "products": {
+    "heading": "What we build",
+    "sub": "Three product lines, one standard of precision.",
+    "items": [
+      { "code": "AL-PRT-001", "title": "Motorcycle Parts", "desc": "Precision-machined components for major bike platforms — built to OEM tolerances.", "img": "product-parts.jpg" },
+      { "code": "AL-CNC-002", "title": "CNC Machines", "desc": "Machines designed, built and assembled at our own facility.", "img": "product-cnc.jpg" },
+      { "code": "AL-SLV-003", "title": "Cylinder Sleeves", "desc": "Hard-wearing sleeves cast and finished exactly to spec.", "img": "product-sleeve.jpg" }
+    ]
+  },
+
+  "showcase": {
+    "heading": "A closer look at our parts",
+    "sub": "Product shots of what leaves our floor — piston, valve and sleeve.",
+    "items": [
+      {
+        "code": "AL-PST-001",
+        "title": "Pistons — Motorcycle Parts",
+        "desc": "Cast and machined pistons with controlled ring-groove geometry for a tight, long-lasting seal.",
+        "img": "showcase-piston.png",
+        "gradientOpacity": 0.15,
+        "specs": [
+          { "label": "MATERIAL", "value": "Aluminium alloy" },
+          { "label": "SIZES", "value": "Ø 47 – 70 mm" },
+          { "label": "DESIGN", "value": "3-ring, flat crown" },
+          { "label": "FIT", "value": "OEM clearances" }
+        ]
+      },
+      {
+        "code": "AL-VLV-001",
+        "title": "Engine Valves",
+        "desc": "Intake and exhaust valves forged from heat-resistant alloy steel, hardened and precision-ground for a perfect seal under combustion load.",
+        "img": "showcase-valve.png",
+        "gradientOpacity": 0.25,
+        "specs": [
+          { "label": "MATERIAL", "value": "21-4N / EN52 alloy steel" },
+          { "label": "STEM Ø", "value": "5.0 / 5.5 mm" },
+          { "label": "TOLERANCE", "value": "±0.005 mm" },
+          { "label": "FACE", "value": "Induction hardened 45°" }
+        ]
+      },
+      {
+        "code": "AL-SLV-002",
+        "title": "Cylinder Sleeves",
+        "desc": "Centrifugally cast iron liners, honed to a controlled crosshatch for ring sealing and long service life.",
+        "img": "showcase-sleeve.png",
+        "gradientOpacity": 0.35,
+        "specs": [
+          { "label": "MATERIAL", "value": "Centrifugal cast iron" },
+          { "label": "BORE Ø", "value": "47 – 57 mm" },
+          { "label": "FINISH", "value": "Plateau honed" },
+          { "label": "TOLERANCE", "value": "±0.01 mm" }
+        ]
+      }
+    ]
+  },
+
+  "quality": {
+    "heading": "QUALITY & ASSURANCE",
+    "b1t": "ISO", "b1v": "9001", "b1d": "Quality Management System",
+    "b2t": "QA", "b2v": "100%", "b2d": "Final batch inspection",
+    "b3t": "MET", "b3v": "µm", "b3d": "In-house metrology lab",
+    "b4t": "OEM", "b4v": "SPEC", "b4d": "Built to original tolerances"
+  },
+
+  "about": {
+    "heading": "Built on the factory floor",
+    "body1": "Alamza Industry runs a dedicated manufacturing facility near the Sahiwal bypass. We cast, machine and finish our products in-house — from motorcycle parts to complete CNC machines and cylinder sleeves.",
+    "body2": "Raw material comes in one gate; measured, tested parts leave the other. That control over every step is what keeps our quality consistent."
+  },
+
+  "team": {
+    "heading": "The people behind the parts",
+    "sub": "The engineers and craftsmen who run the floor.",
+    "members": [
+      { "name": "Javed Iqbal", "role": "Founder & Owner", "img": "team-1.jpg", "alt": "Javed Iqbal" },
+      { "name": "Butt Sahab", "role": "Senior Engineer", "img": "team-2.jpg", "alt": "Butt Sahab" },
+      { "name": "Imtanan Javed", "role": "Quality Manager", "img": "team-3.jpg", "alt": "Imtanan Javed" },
+      { "name": "Hassaan Javed", "role": "Finance Manager", "img": "team-4.jpg", "alt": "Hassaan Javed" }
+    ]
+  },
+
+  "gallery": {
+    "heading": "On the factory floor",
+    "sub": "Real work, straight from the workshop.",
+    "images": [
+    {"img" : "gallery-1.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-2.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-3.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-4.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-5.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-6.jpg", "alt":"Look of our machines"},
+    {"img" : "gallery-7.jpg", "alt":"Look of our machines"}
+
+  ]
+  },
+
+  "contact": {
+    "heading": "Get a quote",
+    "sub": "Tell us what you need — we usually respond the same day.",
+    "phone": "0303-0005606",
+    "whatsapp": "923030005606",
+    "email": "HamzaJaved1213@gmail.com",
+    "address": "Near Sahiwal Bypass, Sahiwal, Punjab, Pakistan"
+  },
+
+  "intern": {
+    "code": "APPLICATION · FORM AL-INT",
+    "title": "Submit your internship work",
+    "sub": "Fields marked * are required.",
+    "submitText": "Submit Application",
+    "uploadEnabled": false,
+    "urlsEnabled": true,
+    "uploadLabel": "FILES",
+    "uploadHint": "(MAX 30 MB EACH)",
+    "urlsLabel": "WORK LINKS",
+    "urlsHint": "(Google Drive, GitHub, YouTube, etc.)",
+    "urlPlaceholder": "https://drive.google.com/...",
+    "departments": ["Production", "CNC Machining", "Quality Control", "Casting / Foundry", "Office / Admin", "Other"],
+    "fields": {
+      "name":       { "label": "FULL NAME",              "placeholder": "e.g. Ahmad Raza",                "required": true },
+      "email":      { "label": "EMAIL",                  "placeholder": "you@email.com",                  "required": true },
+      "phone":      { "label": "PHONE",                  "placeholder": "03xx-xxxxxxx",                   "required": true },
+      "cnic":       { "label": "CNIC",                   "placeholder": "xxxxx-xxxxxxx-x",                "required": false },
+      "city":       { "label": "CITY",                   "placeholder": "e.g. Sahiwal",                   "required": false },
+      "institute":  { "label": "UNIVERSITY / INSTITUTE", "placeholder": "e.g. UET Lahore",                "required": true },
+      "field":      { "label": "FIELD OF STUDY",         "placeholder": "e.g. Mechanical Engineering",    "required": true },
+      "dept":       { "label": "DEPARTMENT",             "placeholder": "— Select department —",          "required": true },
+      "duration":   { "label": "DURATION",               "placeholder": "e.g. 6 weeks (Jun – Aug 2026)",  "required": false },
+      "supervisor": { "label": "SUPERVISOR",             "placeholder": "Factory supervisor ka naam",     "required": false },
+      "note":       { "label": "WHAT ARE YOU SUBMITTING?","placeholder": "e.g. Week 4 report — CNC section observations and measurements", "required": true }
+    }
+  },
+
+  "social": {
+    "facebook": "https://www.facebook.com/AlamzaIndustry",
+    "instagram": "https://www.instagram.com/alamzaindustry",
+    "youtube": "",
+    "tiktok": "",
+    "linkedin": ""
+  }
+}
