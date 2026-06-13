@@ -8,7 +8,7 @@
 // ════════════════════════════════════════════════════════════════
 
 // ─── site-data.json ko load karna ───────────────────────────────
-(function () {
+(function () { 
   function apply(data) {
     window.SITE_DATA = data || {};
     window.SITE_DATA_READY = true;

@@ -15,9 +15,9 @@
     "ctaSecondary": "WhatsApp Us",
     "partCode": "AL-VLV-001",
     "partLabel": "ENGINE VALVE · ALLOY STEEL",
-    "stat1v": "3", "stat1l": "PRODUCT LINES",
+    "stat1v": "Multiple", "stat1l": "PRODUCT LINES",
     "stat2v": "In-house", "stat2l": "CNC MACHINING",
-    "stat3v": "Sahiwal", "stat3l": "PAKISTAN"
+    "stat3v": "Sahiwal", "stat3l": "PUNJAB PAKISTAN"
   },
 
   "products": {
@@ -97,7 +97,7 @@
       { "name": "Javed Iqbal", "role": "Founder & Owner", "img": "team-1.jpg", "alt": "Javed Iqbal" },
       { "name": "Imtanan Javed", "role": "Quality Manager", "img": "team-2.jpg", "alt": "Imtanan Javed" },
       { "name": "M. Hassaan", "role": "Finance Manager", "img": "team-3.jpg", "alt": "Hassaan Javed" },
-      { "name": "Bilal Ansari", "role": "CNCia", "img": "team-4.jpg", "alt": "Bilal Javed" }
+      { "name": "Faizan Ali", "role": "Machine Designer", "img": "team-4.jpg", "alt": "Faizan Ali" }
 
     ]
   },
