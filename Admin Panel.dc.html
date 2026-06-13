@@ -40,6 +40,27 @@
     [data-login-bg] { animation: admDrift 22s linear infinite; }
     [data-tabbtn]:hover { color: #c8cfd8 !important; }
     @media (prefers-reduced-motion: reduce) { [data-app], [data-stats-row] > *, [data-login-card], [data-login-bg] { animation: none !important; } }
+
+    /* ═══ MOBILE — compact, decluttered, professional ═══ */
+    @media (max-width: 640px) {
+      [data-adm-bar] { padding: 11px 14px !important; gap: 10px 12px !important; }
+      [data-adm-actions] { gap: 14px !important; }
+      [data-adm-tabs] { padding: 0 8px 0 14px !important; gap: 0 !important; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      [data-adm-tabs]::-webkit-scrollbar { display: none; }
+      [data-tabbtn] { padding: 12px 11px !important; font-size: 10px !important; letter-spacing: 1px !important; }
+      [data-adm-main] { padding: 18px 14px 64px !important; }
+      [data-stats-row] { grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin-bottom: 20px !important; }
+      [data-stat] { padding: 14px 14px !important; border-radius: 12px !important; }
+      [data-stat-num] { font-size: 23px !important; margin-top: 10px !important; }
+      [data-row] { padding: 16px 16px !important; }
+      [data-adm-settings] > div { padding: 18px 16px !important; }
+      [data-login-card] { padding: 28px 22px !important; }
+      [data-adm-fbbadge] { display: none !important; }
+      [data-adm-sechead] { flex-direction: column !important; align-items: flex-start !important; gap: 5px !important; }
+      [data-adm-guide] { padding: 34px 16px 0 !important; }
+      [data-guide-head] { display: none !important; }
+      [data-guide-table] > div { grid-template-columns: 1fr !important; gap: 3px 0 !important; padding: 13px 16px !important; }
+    }
   </style>
 </helmet>
 
@@ -90,19 +111,19 @@
 
       <!-- header -->
       <div style="background: #11161d; border-bottom: 1px solid #1f2733; position: sticky; top: 0; z-index: 50;">
-        <div style="max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+        <div data-adm-bar="" style="max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; color: #0b0e13;">A</div>
-            <div style="font-weight: 800; letter-spacing: 1px; font-size: 15px;">Admin Panel</div>
-            <span style="{{ fbBadgeStyle }}">{{ fbBadgeText }}</span>
+            <div style="font-weight: 800; letter-spacing: 1px; font-size: 15px; white-space: nowrap;">Admin Panel</div>
+            <span data-adm-fbbadge="" style="{{ fbBadgeStyle }}">{{ fbBadgeText }}</span>
           </div>
-          <div style="display: flex; align-items: center; gap: 16px;">
+          <div data-adm-actions="" style="display: flex; align-items: center; gap: 16px;">
             <a href="{{ websiteUrl }}" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5b9bff; text-decoration: none;">OPEN WEBSITE ↗</a>
             <span onClick="{{ logout }}" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #9aa3ad; cursor: pointer; border: 1px solid #2b3340; padding: 8px 14px; border-radius: 6px;" style-hover="color: #e8eaed;">LOGOUT</span>
           </div>
         </div>
         <!-- tabs -->
-        <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; gap: 6px; overflow-x: auto;">
+        <div data-adm-tabs="" style="max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; gap: 6px; overflow-x: auto;">
           <span onClick="{{ tabM }}" data-tabbtn="" style="{{ tsM }}">MESSAGES{{ newBadge }}</span>
           <span onClick="{{ tabI }}" data-tabbtn="" style="{{ tsI }}">INTERN SUBMISSIONS</span>
           <span onClick="{{ tabS }}" data-tabbtn="" style="{{ tsS }}">SETTINGS</span>
@@ -110,7 +131,7 @@
         </div>
       </div>
 
-      <div style="max-width: 1100px; margin: 0 auto; padding: 26px 24px 80px;">
+      <div data-adm-main="" style="max-width: 1100px; margin: 0 auto; padding: 26px 24px 80px;">
 
         <!-- ═══ DASHBOARD STATS ═══ -->
         <div data-stats-row="" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 26px;">
@@ -119,7 +140,7 @@
               <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">TOTAL MESSAGES</span>
               <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoMail }}</span>
             </div>
-            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statMsgTotal }}</div>
+            <div data-stat-num="" style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statMsgTotal }}</div>
             <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">{{ statMsgSub }}</div>
           </div>
           <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
@@ -127,7 +148,7 @@
               <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">UNREAD</span>
               <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoBell }}</span>
             </div>
-            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1; color: {{ unreadColor }};">{{ statUnread }}</div>
+            <div data-stat-num="" style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1; color: {{ unreadColor }};">{{ statUnread }}</div>
             <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">{{ unreadSub }}</div>
           </div>
           <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
@@ -135,7 +156,7 @@
               <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">INTERN SUBMISSIONS</span>
               <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoUser }}</span>
             </div>
-            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statSubs }}</div>
+            <div data-stat-num="" style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statSubs }}</div>
             <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">applications received</div>
           </div>
           <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
@@ -158,7 +179,7 @@
 
         <!-- ── MESSAGES TAB ── -->
         <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
+          <div data-adm-sechead="" style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
             <h2 style="margin: 0; font-size: 22px; font-weight: 800;">Contact Messages</h2>
             <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #79828c;">{{ msgCountLabel }}</span>
           </div>
@@ -198,7 +219,7 @@
 
         <!-- ── INTERN SUBMISSIONS TAB ── -->
         <sc-if value="{{ isInterns }}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
+          <div data-adm-sechead="" style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
             <h2 style="margin: 0; font-size: 22px; font-weight: 800;">Intern Submissions</h2>
             <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #79828c;">{{ subCountLabel }}</span>
           </div>
@@ -265,7 +286,7 @@
 
         <!-- ── SETTINGS TAB ── -->
         <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
-          <div style="max-width: 640px; display: flex; flex-direction: column; gap: 18px;">
+          <div data-adm-settings="" style="max-width: 640px; display: flex; flex-direction: column; gap: 18px;">
             <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 24px;">
               <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 2.5px; color: #5b9bff; margin-bottom: 14px;">CHANGE ADMIN PASSWORD</div>
               <form onSubmit="{{ savePass }}" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
@@ -293,7 +314,7 @@
         <!-- ── GUIDE TAB ── -->
         <sc-if value="{{ isGuide }}" hint-placeholder-val="{{ false }}">
 <div style="min-height: 100vh; background: #0e1116; font-family: Archivo, sans-serif; color: #c8cfd8; padding: 0 0 90px;">
-  <div style="max-width: 820px; margin: 0 auto; padding: 56px 24px 0;">
+  <div data-adm-guide="" style="max-width: 820px; margin: 0 auto; padding: 56px 24px 0;">
 
     <div style="display: flex; align-items: center; gap: 12px;">
       <div style="width: 40px; height: 40px; border-radius: 9px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0b0e13;">A</div>
@@ -314,7 +335,7 @@
         <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">1</span>
         <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Folder mein kya kya hai?</h2>
       </div>
-      <div style="margin-top: 18px; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+      <div data-guide-table="" style="margin-top: 18px; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
         <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 0; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
           <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">Alamza Industry.dc.html</span>
           <span style="font-size: 13.5px; color: #9aa3ad;">Main website — customers yeh dekhte hain</span>
@@ -404,8 +425,8 @@
         <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Logo aur photos kaise lagayen?</h2>
       </div>
       <p style="margin: 16px 0 18px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Apni saari images <strong style="color: #7ee2a8;">assets/</strong> folder mein daalein (jo website ki files ke saath hai). Website khud utha legi — koi code change nahi karna. <strong style="color: #c8cfd8;">site-data.json mein sirf file ka naam likhein</strong> (jaise <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">"team-1.jpg"</span>), website khud <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">assets/</span> laga leti hai. Jab tak photo nahi hogi, dotted placeholder dikhega jis par file ka naam likha hota hai.</p>
-      <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
-        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 11px 20px; border-bottom: 1px solid #1a212b; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #79828c;">
+      <div data-guide-table="" style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+        <div data-guide-head="" style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 11px 20px; border-bottom: 1px solid #1a212b; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #79828c;">
           <span>assets/ MEIN FILE KA NAAM</span><span>KAHAN DIKHEGI</span><span>BEHTAR SIZE</span>
         </div>
         <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
