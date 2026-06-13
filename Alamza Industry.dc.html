@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&amp;family=Anton&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
   <script src="firebase-config.js"></script>
   <script src="site-content.js"></script>
   <style>
@@ -49,7 +49,7 @@
       <a href="#top" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #e8eaed;">
         <div style="position: relative; width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0b0e13; overflow: hidden; flex-shrink: 0;">
           <span data-ph="">A</span>
-          <img src="logo.png" alt="{{ c.brand.name }} logo" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+          <img src="assets/logo.png" alt="{{ c.brand.name }} logo" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
         </div>
         <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 16px; white-space: nowrap;">{{ c.brand.name }} <span style="color: #5b9bff;">{{ c.brand.nameAccent }}</span></div>
       </a>
@@ -116,7 +116,7 @@
         <div style="position: absolute; top: 16px; left: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #5b9bff;">{{ c.hero.partCode }}</div>
         <div style="position: absolute; top: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #4a5260;">SECTION VIEW</div>
         <span data-ph="" style="position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5e6b7a">[ hero-part.png ]</span>
-        <img src="hero-part.png" alt="Engine valve" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; box-sizing: border-box;">
+        <img src="assets/hero-part.png" alt="Engine valve" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; box-sizing: border-box;">
         <div style="position: absolute; right: 30px; top: 64px; bottom: 96px; width: 1px; background: rgba(91,155,255,0.45);">
           <div style="position: absolute; top: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid rgba(91,155,255,0.8);"></div>
           <div style="position: absolute; bottom: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid rgba(91,155,255,0.8);"></div>
@@ -209,7 +209,7 @@
       </div>
       <div data-reveal="" data-ph-bg="" style="position: relative; height: clamp(280px, 36vw, 380px); border-radius: 16px; overflow: hidden; border: 1px solid #1f2733; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #5e6b7a; letter-spacing: 1px;">
         <span data-ph="">[ about-factory.jpg ]</span>
-        <img src="about-factory.jpg" alt="Alamza factory" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+        <img src="assets/about-factory.jpg" alt="Alamza factory" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
       </div>
     </div>
   </div>
@@ -479,6 +479,7 @@
         <a href="#team" style="color: #9aa3ad; text-decoration: none;">TEAM</a>
         <a href="#interns" style="color: #9aa3ad; text-decoration: none;">INTERN PORTAL</a>
         <a href="#contact" style="color: #9aa3ad; text-decoration: none;">CONTACT</a>
+        <a href="{{ adminUrl }}" target="_blank" rel="noopener" style="color: #5e6b7a; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;" style-hover="color: #5b9bff;"><span style="width: 5px; height: 5px; border-radius: 50%; background: currentColor;"></span>ADMIN</a>
       </div>
     </div>
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; padding-top: 22px;">
@@ -587,7 +588,7 @@ class Component extends DCLogic {
         code: it.code || "",
         title: it.title || "",
         desc: it.desc || "",
-        img: it.img || "",
+        img: it.img ? "assets/" + it.img : "",
         ph: "[ " + (it.img || "image") + " ]",
         specs: (it.specs || []).map(function (s) { return { label: s.label || "", value: s.value || "" }; }),
         scrimStyle: {
@@ -755,10 +756,19 @@ class Component extends DCLogic {
         return;
       }
 
+      // Submission save karna. NOTE: hum yahan file ka public download URL store NAHI karte —
+      // sirf storage "path" rakhte hain. URL admin (logged-in) khud banata hai. Isse files
+      // sirf admin ke liye readable rehti hain (rules: read = auth only).
       var saveRecord = function (uploaded, adding) {
         fb.database().ref("internSubmissions").push(
           Object.assign({}, data, { files: uploaded, links: urls, totalSize: adding, ts: Date.now() })
         ).then(function () {
+          // storage counter aage badha do (gate ke liye) — yeh sirf ek number hai, sensitive nahi.
+          if (adding > 0) {
+            try {
+              fb.database().ref("meta/storageUsed").transaction(function (cur) { return (cur || 0) + adding; });
+            } catch (err) {}
+          }
           f.reset();
           self.setState({ uploading: false, upPct: 100, upStatus: "Submitted \u2014 thank you, " + (data.name || "") + "!", pickedFiles: [], urls: [""] });
         }).catch(function () {
@@ -768,12 +778,13 @@ class Component extends DCLogic {
 
       if (!files.length) { saveRecord([], 0); return; }
 
-      fb.database().ref("internSubmissions").once("value").then(function (snap) {
-        var used = 0, v = snap.val() || {};
-        Object.keys(v).forEach(function (k) { used += (v[k].totalSize || 0); });
+      // Storage gate: poori submissions list parhne ke bajaye sirf ek public counter parhte hain
+      // (submissions khud sirf admin parh sakta hai). Yeh counter admin ke open hone par sahi hota rehta hai.
+      fb.database().ref("meta/storageUsed").once("value").then(function (snap) {
+        var used = snap.val() || 0;
         var adding = files.reduce(function (s, x) { return s + x.size; }, 0);
         if (used + adding > MAX_TOTAL) {
-          self.setState({ uploading: false, upStatus: "Total storage limit (100 MB) reached \u2014 please contact the admin." });
+          self.setState({ uploading: false, upStatus: "Storage limit reached \u2014 please contact the admin." });
           return;
         }
         var uploaded = [];
@@ -789,14 +800,14 @@ class Component extends DCLogic {
           }, function () {
             self.setState({ uploading: false, upStatus: "Upload failed for " + file.name + " \u2014 please try again." });
           }, function () {
-            task.snapshot.ref.getDownloadURL().then(function (url) {
-              uploaded.push({ fileName: file.name, size: file.size, url: url, path: path });
-              idx++;
-              next();
-            });
+            uploaded.push({ fileName: file.name, size: file.size, path: path });
+            idx++;
+            next();
           });
         };
         next();
+      }).catch(function () {
+        self.setState({ uploading: false, upStatus: "Could not start upload \u2014 please try again." });
       });
     });
   };
@@ -955,14 +966,15 @@ class Component extends DCLogic {
     var wa = (c.contact && c.contact.whatsapp) ? c.contact.whatsapp : "";
     var intern = c.intern || {};
 
+    var asset = function (n) { return n ? "assets/" + n : ""; };
     var products = ((c.products && c.products.items) || []).map(function (p, i) {
-      return { code: p.code || "", title: p.title || "", desc: p.desc || "", img: p.img || "", num: self.pad2(i + 1), ph: "[ " + (p.img || "image") + " ]" };
+      return { code: p.code || "", title: p.title || "", desc: p.desc || "", img: asset(p.img), num: self.pad2(i + 1), ph: "[ " + (p.img || "image") + " ]" };
     });
     var team = ((c.team && c.team.members) || []).map(function (m) {
-      return { name: m.name || "", role: m.role || "", img: m.img || "", alt: m.alt || (m.name || "Team member"), ph: "[ " + (m.img || "photo") + " ]" };
+      return { name: m.name || "", role: m.role || "", img: asset(m.img), alt: m.alt || (m.name || "Team member"), ph: "[ " + (m.img || "photo") + " ]" };
     });
     var gallery = ((c.gallery && c.gallery.images) || []).map(function (g) {
-      return { img: g.img || "", alt: g.alt || "Gallery image", ph: "[ " + (g.img || "image") + " ]" };
+      return { img: asset(g.img), alt: g.alt || "Gallery image", ph: "[ " + (g.img || "image") + " ]" };
     });
 
     var uploadEnabled = intern.uploadEnabled !== false;
@@ -975,6 +987,7 @@ class Component extends DCLogic {
       team: team,
       gallery: gallery,
       hasGallery: gallery.length > 0,
+      adminUrl: (c.adminUrl && String(c.adminUrl).trim()) ? c.adminUrl : "Alamza Admin.html",
       departments: (intern.departments || []),
       fld: this.buildFields(c),
       showUpload: uploadEnabled,

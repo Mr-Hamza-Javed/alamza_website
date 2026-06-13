@@ -15,6 +15,7 @@ window.ALAMZA_WEBSITE_URL = "https://alamza-web.web.app";
 window.ALAMZA = (function () {
   var SDK = [
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js",
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"
   ];

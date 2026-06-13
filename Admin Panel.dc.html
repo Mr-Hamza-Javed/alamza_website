@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="alamza-admin-core.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" fill="#0e1116"></rect>
+    <rect x="156" y="150" width="200" height="200" rx="42" fill="#2f6fe0"></rect>
+    <text x="256" y="318" font-family="Archivo, Arial, sans-serif" font-size="170" font-weight="900" fill="#0b0e13" text-anchor="middle">A</text>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <style>
+    body { margin: 0; background: #0e1116; -webkit-font-smoothing: antialiased; }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; background: #0e1116; font-family: Archivo, sans-serif; color: #e8eaed;">
+
+  <!-- ═══════════ CHECKING SESSION ═══════════ -->
+  <sc-if value="{{ showLoading }}" hint-placeholder-val="{{ true }}">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; color: #5e6b7a; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px;">CHECKING…</div>
+  </sc-if>
+
+  <!-- ═══════════ LOGIN ═══════════ -->
+  <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Admin Login" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background-color: #0e1116; background-image: linear-gradient(rgba(91,155,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.04) 1px, transparent 1px); background-size: 48px 48px;">
+      <div style="width: 100%; max-width: 400px; background: #11161d; border: 1px solid #1f2733; border-radius: 18px; padding: 38px 34px; box-shadow: 0 40px 90px rgba(0,0,0,0.5);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border-radius: 9px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0b0e13;">A</div>
+          <div>
+            <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 16px; white-space: nowrap;">ALAMZA <span style="color: #5b9bff;">INDUSTRY</span></div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c; margin-top: 4px;">ADMIN PANEL</div>
+          </div>
+        </div>
+        <form onSubmit="{{ doLogin }}" style="margin-top: 30px;">
+          <label for="aem" style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 8px;">EMAIL</label>
+          <input id="aem" name="aem" type="email" autocomplete="username" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 15px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          <label for="apw" style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin: 16px 0 8px;">PASSWORD</label>
+          <input id="apw" name="apw" type="password" autocomplete="current-password" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 15px; outline: none; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+          <button type="submit" disabled="{{ loggingIn }}" style="margin-top: 18px; width: 100%; background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif;">Log in</button>
+          <div style="margin-top: 14px; color: #d08770; font-size: 13.5px; min-height: 18px;">{{ loginStatus }}</div>
+          <div style="margin-top: 6px; color: #5e6b7a; font-size: 12.5px; line-height: 1.5;">Sirf authorized admin log in kar sakta hai. Email/password Firebase Authentication se aata hai.</div>
+          <div onClick="{{ toggleForgot }}" style="margin-top: 14px; color: #5b9bff; font-size: 12.5px; cursor: pointer; user-select: none; display: inline-block;" style-hover="text-decoration: underline;">Password bhool gaye?</div>
+          <sc-if value="{{ showForgot }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 12px; background: #0b1016; border: 1px solid #1f2733; border-radius: 10px; padding: 14px 16px; color: #9aa3ad; font-size: 12.5px; line-height: 1.7;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #79828c; margin-bottom: 8px;">PASSWORD RESET KARNA</div>
+              <div>1. <strong style="color: #c8cfd8;">console.firebase.google.com</strong> kholein aur usi Google account se login karein jis se Firebase project banaya tha.</div>
+              <div style="margin-top: 5px;">2. <strong style="color: #c8cfd8;">alamza-web</strong> project → <strong style="color: #c8cfd8;">Build → Authentication → Users</strong>.</div>
+              <div style="margin-top: 5px;">3. Apne admin user ke aage <strong style="color: #c8cfd8;">⋮</strong> (3 dots) → <strong style="color: #c8cfd8;">Reset password</strong> ya <strong style="color: #c8cfd8;">Edit</strong> se naya password set karein.</div>
+              <div style="margin-top: 5px;">4. Wapas aakar naye password se login karein.</div>
+            </div>
+          </sc-if>
+        </form>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ═══════════ APP ═══════════ -->
+  <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Admin App">
+
+      <!-- header -->
+      <div style="background: #11161d; border-bottom: 1px solid #1f2733; position: sticky; top: 0; z-index: 50;">
+        <div style="max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; color: #0b0e13;">A</div>
+            <div style="font-weight: 800; letter-spacing: 1px; font-size: 15px;">Admin Panel</div>
+            <span style="{{ fbBadgeStyle }}">{{ fbBadgeText }}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <a href="{{ websiteUrl }}" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5b9bff; text-decoration: none;">OPEN WEBSITE ↗</a>
+            <span onClick="{{ logout }}" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #9aa3ad; cursor: pointer; border: 1px solid #2b3340; padding: 8px 14px; border-radius: 6px;" style-hover="color: #e8eaed;">LOGOUT</span>
+          </div>
+        </div>
+        <!-- tabs -->
+        <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; gap: 6px; overflow-x: auto;">
+          <span onClick="{{ tabM }}" style="{{ tsM }}">MESSAGES{{ newBadge }}</span>
+          <span onClick="{{ tabI }}" style="{{ tsI }}">INTERN SUBMISSIONS</span>
+          <span onClick="{{ tabS }}" style="{{ tsS }}">SETTINGS</span>
+          <span onClick="{{ tabG }}" style="{{ tsG }}">GUIDE</span>
+        </div>
+      </div>
+
+      <div style="max-width: 1100px; margin: 0 auto; padding: 26px 24px 80px;">
+
+        <sc-if value="{{ fbMissing }}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(208,135,112,0.08); border: 1px solid rgba(208,135,112,0.4); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; color: #d08770; font-size: 14px; line-height: 1.6;">
+            <strong>Firebase connected nahi hai.</strong> Is file ke top par <strong style="color: #c8cfd8;">ALAMZA_FIREBASE_CONFIG</strong> ki keys check karein.
+          </div>
+        </sc-if>
+
+        <!-- ── MESSAGES TAB ── -->
+        <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
+            <h2 style="margin: 0; font-size: 22px; font-weight: 800;">Contact Messages</h2>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #79828c;">{{ msgCountLabel }}</span>
+          </div>
+          <sc-if value="{{ noMessages }}" hint-placeholder-val="{{ true }}">
+            <div style="border: 1px dashed #2b3340; border-radius: 14px; padding: 44px 24px; text-align: center; color: #79828c; font-size: 14.5px;">Abhi koi message nahi aaya. Jab koi website ke contact form se message bhejega, yahan foran nazar aayega.</div>
+          </sc-if>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <sc-for list="{{ messages }}" as="m" hint-placeholder-count="2">
+              <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 20px 22px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-weight: 700; font-size: 16px;">{{ m.name }}</span>
+                    <sc-if value="{{ m.isNew }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #0b0e13; background: #5b9bff; padding: 3px 8px; border-radius: 100px; font-weight: 600;">NEW</span>
+                    </sc-if>
+                  </div>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5e6b7a;">{{ m.date }}</span>
+                </div>
+                <div style="display: flex; gap: 18px; flex-wrap: wrap; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9aa3ad;">
+                  <span>{{ m.phone }}</span>
+                  <span>{{ m.email }}</span>
+                </div>
+                <p style="margin: 14px 0 16px; color: #c8cfd8; font-size: 14.5px; line-height: 1.65; white-space: pre-wrap;">{{ m.message }}</p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                  <sc-if value="{{ m.hasPhone }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ m.wa }}" target="_blank" rel="noopener" style="background: #1da851; color: #fff; font-weight: 600; font-size: 12.5px; padding: 9px 16px; border-radius: 7px; text-decoration: none;">Reply on WhatsApp</a>
+                  </sc-if>
+                  <sc-if value="{{ m.isNew }}" hint-placeholder-val="{{ false }}">
+                    <button data-id="{{ m.id }}" onClick="{{ markRead }}" style="background: transparent; color: #9aa3ad; font-weight: 600; font-size: 12.5px; padding: 9px 16px; border-radius: 7px; border: 1px solid #2b3340; cursor: pointer; font-family: Archivo, sans-serif;">Mark as read</button>
+                  </sc-if>
+                  <button data-id="{{ m.id }}" onClick="{{ delMsg }}" style="background: transparent; color: #d08770; font-weight: 600; font-size: 12.5px; padding: 9px 16px; border-radius: 7px; border: 1px solid rgba(208,135,112,0.35); cursor: pointer; font-family: Archivo, sans-serif;">Delete</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- ── INTERN SUBMISSIONS TAB ── -->
+        <sc-if value="{{ isInterns }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px;">
+            <h2 style="margin: 0; font-size: 22px; font-weight: 800;">Intern Submissions</h2>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #79828c;">{{ subCountLabel }}</span>
+          </div>
+          <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 22px; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; color: #79828c; margin-bottom: 10px;">
+              <span>STORAGE USED (FIREBASE STORAGE — SIRF INTERN FILES)</span>
+              <span style="color: #c8cfd8;">{{ usageLabel }}</span>
+            </div>
+            <div style="height: 8px; border-radius: 100px; background: #1a212b; overflow: hidden;">
+              <div style="height: 100%; border-radius: 100px; background: linear-gradient(90deg, #5b9bff, #2563eb); width: {{ usagePctW }}; transition: width 0.4s ease;"></div>
+            </div>
+          </div>
+          <sc-if value="{{ noSubs }}" hint-placeholder-val="{{ true }}">
+            <div style="border: 1px dashed #2b3340; border-radius: 14px; padding: 44px 24px; text-align: center; color: #79828c; font-size: 14.5px;">Abhi koi submission nahi aayi. Interns website ke "Intern Portal" section se apna data aur files bhej sakte hain.</div>
+          </sc-if>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <sc-for list="{{ subs }}" as="s" hint-placeholder-count="2">
+              <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 22px 24px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-weight: 700; font-size: 16.5px;">{{ s.name }}</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #5b9bff; border: 1px solid rgba(91,155,255,0.4); padding: 3px 9px; border-radius: 100px;">{{ s.dept }}</span>
+                  </div>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5e6b7a;">{{ s.date }}</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 22px; margin-top: 14px;">
+                  <sc-for list="{{ s.info }}" as="kv" hint-placeholder-count="4">
+                    <div>
+                      <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #79828c;">{{ kv.l }}</div>
+                      <div style="font-size: 14px; color: #c8cfd8; margin-top: 3px; overflow-wrap: anywhere;">{{ kv.v }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="margin-top: 16px; background: #0b1016; border: 1px solid #1a212b; border-radius: 10px; padding: 13px 16px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #79828c; margin-bottom: 6px;">SUBMISSION NOTE</div>
+                  <div style="font-size: 14px; color: #c8cfd8; line-height: 1.6; white-space: pre-wrap;">{{ s.note }}</div>
+                </div>
+                <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <sc-for list="{{ s.files }}" as="fl" hint-placeholder-count="1">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #0b1016; border: 1px solid #1a212b; border-radius: 10px; padding: 11px 16px;">
+                      <div style="display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;">
+                        <span style="font-weight: 600; font-size: 13.5px; overflow-wrap: anywhere;">{{ fl.fileName }}</span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #79828c;">{{ fl.sizeLabel }}</span>
+                      </div>
+                      <button data-path="{{ fl.path }}" data-url="{{ fl.url }}" onClick="{{ openFile }}" style="color: #5b9bff; font-weight: 600; font-size: 12.5px; background: transparent; border: 1px solid rgba(91,155,255,0.45); padding: 7px 14px; border-radius: 7px; flex-shrink: 0; cursor: pointer; font-family: Archivo, sans-serif;">Download</button>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ s.hasLinks }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #79828c;">SUBMITTED LINKS</div>
+                    <sc-for list="{{ s.links }}" as="lk" hint-placeholder-count="1">
+                      <a href="{{ lk }}" target="_blank" rel="noopener" style="display: block; background: #0b1016; border: 1px solid #1a212b; border-radius: 10px; padding: 11px 16px; color: #5b9bff; font-size: 13px; text-decoration: none; overflow-wrap: anywhere;">{{ lk }}</a>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+                  <button data-id="{{ s.id }}" data-paths="{{ s.paths }}" onClick="{{ delSub }}" style="background: transparent; color: #d08770; font-weight: 600; font-size: 12.5px; padding: 9px 16px; border-radius: 7px; border: 1px solid rgba(208,135,112,0.35); cursor: pointer; font-family: Archivo, sans-serif;">Delete submission</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- ── SETTINGS TAB ── -->
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width: 640px; display: flex; flex-direction: column; gap: 18px;">
+            <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 24px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 2.5px; color: #5b9bff; margin-bottom: 14px;">CHANGE ADMIN PASSWORD</div>
+              <form onSubmit="{{ savePass }}" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <input name="npw" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" style="flex: 1 1 240px; background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 12px 14px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14px; outline: none; box-sizing: border-box;" style-focus="border-color: #5b9bff;">
+                <button type="submit" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 13.5px; padding: 12px 22px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif;">Update</button>
+              </form>
+              <div style="margin-top: 10px; color: #5e6b7a; font-size: 12.5px; line-height: 1.55;">Yeh aapke Firebase Authentication account ka password badal deta hai. Agar “recent login” ka error aaye to ek baar logout karke dobara login karein, phir badlein.</div>
+              <div style="margin-top: 10px; color: #9aa3ad; font-size: 13px; min-height: 18px;">{{ passStatus }}</div>
+              <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid #1a212b; color: #9aa3ad; font-size: 12.5px;">Logged in as: <span style="color: #c8cfd8; font-family: 'JetBrains Mono', monospace;">{{ adminEmail }}</span></div>
+            </div>
+            <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 24px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 2.5px; color: #5b9bff; margin-bottom: 14px;">WEBSITE KA TEXT KAISE BADLEIN?</div>
+              <div style="color: #9aa3ad; font-size: 13.5px; line-height: 1.7;">Website ka sara text ek file <span style="font-family: 'JetBrains Mono', monospace; color: #c8cfd8;">site-data.json</span> mein hota hai (website ke folder ke saath). Text badalne ke liye wo file kisi bhi editor mein khol kar quotes ke andar ka text badlein. Logo aur photos bhi static files hain — usi folder mein rakhein.</div>
+            </div>
+            <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 24px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 2.5px; color: #5b9bff; margin-bottom: 14px;">FIREBASE STATUS</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span style="{{ fbBadgeStyle }}">{{ fbBadgeText }}</span>
+              </div>
+              <div style="color: #9aa3ad; font-size: 13.5px; line-height: 1.7;">Login: <strong style="color: #c8cfd8;">Firebase Authentication</strong> (email + password). Data sirf logged-in admin parh sakta hai.<br>Realtime Database: contact messages + intern submissions.<br>Firebase Storage: <strong style="color: #c8cfd8;">sirf intern files</strong>.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ── GUIDE TAB ── -->
+        <sc-if value="{{ isGuide }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 100vh; background: #0e1116; font-family: Archivo, sans-serif; color: #c8cfd8; padding: 0 0 90px;">
+  <div style="max-width: 820px; margin: 0 auto; padding: 56px 24px 0;">
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 40px; height: 40px; border-radius: 9px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0b0e13;">A</div>
+      <div>
+        <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 16px; color: #e8eaed;">ALAMZA <span style="color: #5b9bff;">INDUSTRY</span></div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c; margin-top: 2px;">SETUP GUIDE</div>
+      </div>
+    </div>
+
+    <h1 style="margin: 28px 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 800; letter-spacing: -1px; color: #e8eaed;">Website Setup Guide</h1>
+    <p style="margin: 0 0 8px; font-size: 16px; line-height: 1.7; color: #9aa3ad;">Is guide mein sab kuch hai: text aur photos kaise badalni hain, Firebase rules kaise lagani hain, aur admin panel kaise use karna hai.</p>
+    <div style="display: flex; gap: 16px; margin-top: 18px; flex-wrap: wrap;">
+    </div>
+
+    <!-- ── 1. FILES ── -->
+    <div style="margin-top: 52px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">1</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Folder mein kya kya hai?</h2>
+      </div>
+      <div style="margin-top: 18px; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 0; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">Alamza Industry.dc.html</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;">Main website — customers yeh dekhte hain</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">Admin Panel.dc.html</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;">Messages aur intern submissions dekhne ke liye (editable source)</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">Alamza Admin.html</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;"><strong style="color: #c8cfd8;">Admin panel</strong> — ab website ke saath hi public folder mein rehta hai; website ke footer “ADMIN” link se bhi khulta hai. (Login zaroori.)</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">site-data.json</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;"><strong style="color: #c8cfd8;">Website ka SARA TEXT</strong> — text badalna ho to yehi file edit karein (Step 2)</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">firebase-config.js</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;">Firebase keys — <strong style="color: #7ee2a8;">lag chuki hain ✓</strong></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">site-content.js</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;">Technical helpers — isse haath na lagayen</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">assets/ (folder)</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;"><strong style="color: #c8cfd8;">Aap ki saari images</strong> isi folder mein (logo, photos) — Step 3 dekhein</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; border-bottom: 1px solid #1a212b; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">alamza-admin-core.js</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;">Admin ka helper (Admin Panel.dc.html ke saath) — haath na lagayen</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; padding: 13px 20px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">GUIDE (admin tab)</span>
+          <span style="font-size: 13.5px; color: #9aa3ad;"><strong style="color: #7ee2a8;">Yeh guide</strong> — ab Admin Panel ke andar hai (login ke baad <strong style="color: #c8cfd8;">GUIDE</strong> tab). Alag file ki zaroorat nahi.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. TEXT ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">2</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Website ka text kaise badlein?</h2>
+      </div>
+      <p style="margin: 16px 0 14px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Sara text <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #5b9bff;">site-data.json</span> file mein hai — company name, headline, products, team ke naam, phone number, sab kuch. Yeh static file hai isi liye website itni tez khulti hai. Products, team, gallery aur showcase ab <strong style="color: #c8cfd8;">lists (arrays)</strong> hain — aap jitni chahein utni entries add ya remove kar sakte hain.</p>
+      <div style="margin: 0 0 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">SITE-DATA.JSON SE YEH SAB BADAL SAKTE HAIN</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.6; color: #9aa3ad;">
+          <div>• <strong style="color: #c8cfd8;">Products</strong> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"products" → "items"</span> ek list hai. Har item mein <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">title, code, desc, img</span>. Jitne items list mein honge, utne cards website par aayenge.</div>
+          <div>• <strong style="color: #c8cfd8;">Showcase</strong> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"showcase" → "items"</span>. Har item mein <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">title, code, desc, img</span>, ek <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">specs</span> list, aur <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">gradientOpacity</span> (image par gradient ki gehrai — neeche dekhein).</div>
+          <div>• <strong style="color: #c8cfd8;">Team</strong> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"team" → "members"</span> list. Har member: <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">name, role, img, alt</span>. 4, 5, 6 ya jitne chahein.</div>
+          <div>• <strong style="color: #c8cfd8;">Gallery</strong> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"gallery" → "images"</span> list. Har image: <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">img, alt</span>. <strong style="color: #c8cfd8;">List khali ho to gallery section website par dikhta hi nahi</strong> (neeche dekhein).</div>
+          <div>• <strong style="color: #c8cfd8;">Social links</strong> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"social"</span> mein Facebook, Instagram, YouTube, TikTok, LinkedIn ke link. Khali <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">""</span> wala icon footer mein nahi aayega. WhatsApp <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"contact" → "whatsapp"</span> se.</div>
+          <div>• <strong style="color: #c8cfd8;">Contact</strong> — phone, WhatsApp number, email aur address.</div>
+        </div>
+      </div>
+
+      <div style="margin: 0 0 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">LIST MEIN ENTRY ADD / REMOVE KAISE KAREIN?</div>
+        <div style="font-size: 14px; line-height: 1.7; color: #9aa3ad;">Ek list <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">[ ... ]</span> ke andar hoti hai, aur har entry <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">{ ... }</span> hoti hai jisko comma <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">,</span> alag karta hai. Naya member add karne ke liye poora <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">{ ... }</span> copy karke comma ke baad chipka dein:</div>
+        <pre style="margin: 12px 0 0; background: #0b1016; border: 1px solid #1f2733; border-radius: 10px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #c8cfd8; overflow-x: auto; line-height: 1.6;">"members": [
+  { "name": "Ali Raza", "role": "CNC Operator", "img": "team-1.jpg", "alt": "Ali Raza" },
+  { "name": "Sana Khan", "role": "QC Engineer",  "img": "team-2.jpg", "alt": "Sana Khan" }
+]</pre>
+        <div style="margin-top: 10px; font-size: 13.5px; line-height: 1.7; color: #9aa3ad;">Remove karne ke liye us entry ka <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">{ ... }</span> (aur uske saath wala comma) hata dein. <strong style="color: #c8cfd8;">Aakhri entry ke baad comma nahi hota</strong> — yeh dhyan rahe.</div>
+      </div>
+
+      <div style="margin: 0 0 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">SHOWCASE — HAR IMAGE PAR GRADIENT KAM/ZIADA</div>
+        <div style="font-size: 14px; line-height: 1.7; color: #9aa3ad;">Har showcase item mein <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">"gradientOpacity"</span> hai — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">0</span> (bilkul saaf) se <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">1</span> (sab se gehra) tak. Agar koi image pehle hi <strong style="color: #c8cfd8;">dark</strong> hai to value <strong style="color: #c8cfd8;">kam</strong> rakhein (jaise <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">0.25</span>); agar <strong style="color: #c8cfd8;">bright</strong> hai to thodi <strong style="color: #c8cfd8;">ziada</strong> (jaise <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">0.6</span>). Default <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">0.45</span> hai. Image ke corners khud panel mein blend ho jaate hain.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #9aa3ad;"><strong style="color: #e8eaed;">a)</strong> <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">site-data.json</span> ko kisi bhi editor mein kholen (Notepad bhi chalega).</div>
+        <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #9aa3ad;"><strong style="color: #e8eaed;">b)</strong> Sirf <strong style="color: #c8cfd8;">"quotes ke andar"</strong> ka text badlein. Misal: <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">"title": "FORGED IN SAHIWAL."</span> → <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">"title": "BUILT IN SAHIWAL."</span></div>
+        <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #9aa3ad;"><strong style="color: #e8eaed;">c)</strong> File save karein — website refresh karne par naya text aa jayega. Hosting par hai to file dobara upload kar dein.</div>
+      </div>
+      <div style="margin-top: 14px; background: rgba(208,135,112,0.07); border: 1px solid rgba(208,135,112,0.35); border-radius: 12px; padding: 14px 18px; font-size: 13.5px; line-height: 1.65; color: #d08770;">
+        <strong>Khayal rahe:</strong> Quotes (") aur commas (,) ko mat torein — sirf unke andar ka text badlein. Agar website khali ho jaye to aakhri change wapis kar dein.
+      </div>
+    </div>
+
+    <!-- ── 3. IMAGES ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">3</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Logo aur photos kaise lagayen?</h2>
+      </div>
+      <p style="margin: 16px 0 18px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Apni saari images <strong style="color: #7ee2a8;">assets/</strong> folder mein daalein (jo website ki files ke saath hai). Website khud utha legi — koi code change nahi karna. <strong style="color: #c8cfd8;">site-data.json mein sirf file ka naam likhein</strong> (jaise <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">"team-1.jpg"</span>), website khud <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">assets/</span> laga leti hai. Jab tak photo nahi hogi, dotted placeholder dikhega jis par file ka naam likha hota hai.</p>
+      <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 11px 20px; border-bottom: 1px solid #1a212b; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #79828c;">
+          <span>assets/ MEIN FILE KA NAAM</span><span>KAHAN DIKHEGI</span><span>BEHTAR SIZE</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">logo.png</span><span style="color: #9aa3ad;">Nav bar mein company logo</span><span style="color: #79828c;">200 × 200 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">hero-part.png</span><span style="color: #9aa3ad;">Hero (sab se upar) — bara product render</span><span style="color: #79828c;">900 × 900 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">product-parts.jpg</span><span style="color: #9aa3ad;">Products — Motorcycle Parts card</span><span style="color: #79828c;">800 × 600 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">product-cnc.jpg</span><span style="color: #9aa3ad;">Products — CNC Machines card</span><span style="color: #79828c;">800 × 600 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">product-sleeve.jpg</span><span style="color: #9aa3ad;">Products — Cylinder Sleeves card</span><span style="color: #79828c;">800 × 600 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">showcase-piston.png</span><span style="color: #9aa3ad;">Showcase — Piston ka render (panel 01)</span><span style="color: #79828c;">900 × 900 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">showcase-valve.png</span><span style="color: #9aa3ad;">Showcase — Engine valve ka render (panel 02)</span><span style="color: #79828c;">900 × 900 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">showcase-sleeve.png</span><span style="color: #9aa3ad;">Showcase — Cylinder sleeve ka render (panel 03)</span><span style="color: #79828c;">900 × 900 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">about-factory.jpg</span><span style="color: #9aa3ad;">About section — factory ki photo</span><span style="color: #79828c;">1000 × 750 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; border-bottom: 1px solid #1a212b; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">team-1.jpg, team-2.jpg ...</span><span style="color: #9aa3ad;">Team — jitne members JSON list mein</span><span style="color: #79828c;">600 × 630 px</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(150px, 200px) 1fr minmax(110px, 150px); padding: 12px 20px; font-size: 13px; align-items: center;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e8eaed;">gallery-1.jpg → ...</span><span style="color: #9aa3ad;">Gallery — jitni images JSON list mein, utni (khali ho to section chhup jata hai)</span><span style="color: #79828c;">800 × 600 px</span>
+        </div>
+      </div>
+      <div style="margin-top: 14px; background: rgba(91,155,255,0.06); border: 1px solid rgba(91,155,255,0.25); border-radius: 12px; padding: 14px 18px; font-size: 13.5px; line-height: 1.65; color: #9aa3ad;">
+        <strong style="color: #c8cfd8;">Tip:</strong> Saari images <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">assets/</span> folder mein hi rakhein. Photos 500 KB se chhoti rakhein to website tez khulegi. Naam ka spelling aur chhote harf (lowercase) bilkul same hone chahiyen. <span style="color: #7ee2a8;">Green naam wali PNG renders</span> (hero + showcase) sab se behtreen tab lagti hain jab unka <strong style="color: #c8cfd8;">background transparent</strong> ho — blueprint grid peechay se nazar aata hai.
+      </div>
+    </div>
+
+    <!-- ── 4. INTERN FORM SETTINGS ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">4</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Intern form ko control karna</h2>
+      </div>
+      <p style="margin: 16px 0 14px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Intern form ki har cheez <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #5b9bff;">site-data.json → "intern"</span> se control hoti hai — koi code change nahi.</p>
+
+      <div style="margin: 0 0 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">FILE UPLOAD AUR LINKS — ON / OFF</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.65; color: #9aa3ad;">
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">"uploadEnabled"</span>: <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">true</span> = file upload box dikhega (ab <strong style="color: #c8cfd8;">optional</strong> hai, zaroori nahi). <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">false</span> = upload band.</div>
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">"urlsEnabled"</span>: <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">true</span> = student apne kaam ke <strong style="color: #c8cfd8;">links (URLs)</strong> add kar sakta hai — ek se ziada bhi (“+ ADD ANOTHER LINK”). <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">false</span> = links band.</div>
+          <div>• <strong style="color: #c8cfd8;">Dono</strong> <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">false</span> ho to form mein na upload aayega na links — sirf baaki fields rahenge.</div>
+        </div>
+      </div>
+
+      <div style="margin: 0 0 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">FIELDS — ZAROORI / OPTIONAL, AUR ANDAR KA TEXT</div>
+        <div style="font-size: 14px; line-height: 1.7; color: #9aa3ad;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"intern" → "fields"</span> mein har field ke 3 control hain:</div>
+        <pre style="margin: 12px 0 0; background: #0b1016; border: 1px solid #1f2733; border-radius: 10px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #c8cfd8; overflow-x: auto; line-height: 1.6;">"name": { "label": "FULL NAME", "placeholder": "e.g. Ahmad Raza", "required": true }</pre>
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.65; color: #9aa3ad;">
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">"required"</span> — <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">true</span> rakhein to field zaroori (<span style="color: #5b9bff;">*</span>), <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">false</span> rakhein to (OPTIONAL).</div>
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">"placeholder"</span> — box ke andar dikhne wala halka text (jaise “e.g. Ahmad Raza”). Jo yahan likhenge wohi box mein aayega.</div>
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee2a8;">"label"</span> — field ke upar ka naam.</div>
+        </div>
+      </div>
+
+      <div style="margin: 0 0 0; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">DEPARTMENT LIST</div>
+        <div style="font-size: 14px; line-height: 1.7; color: #9aa3ad;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">"intern" → "departments"</span> ek simple list hai. Naya department add karne ke liye quotes mein naam likh kar comma ke saath add karein, remove karne ke liye hata dein:</div>
+        <pre style="margin: 12px 0 0; background: #0b1016; border: 1px solid #1f2733; border-radius: 10px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #c8cfd8; overflow-x: auto; line-height: 1.6;">"departments": ["Production", "CNC Machining", "Quality Control", "Casting / Foundry"]</pre>
+      </div>
+    </div>
+
+    <!-- ── 5. FIREBASE: SECURITY ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">5</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Firebase — security (sab se zaroori)</h2>
+      </div>
+      <p style="margin: 16px 0 14px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Yeh step aapka data mehfooz banata hai. Maqsad: <strong style="color: #c8cfd8;">koi bhi banda form bhar (SUBMIT) sake, lekin koi bhi data PARH ya DELETE na kar sake — sirf aap (logged-in admin)</strong>. Firebase console (<span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">console.firebase.google.com</span> → alamza-web) mein yeh 4 cheezein karni hain.</p>
+
+      <div style="background: rgba(91,155,255,0.06); border: 1px solid rgba(91,155,255,0.25); border-radius: 12px; padding: 16px 18px; font-size: 13.5px; line-height: 1.7; color: #9aa3ad;">
+        <strong style="color: #c8cfd8;">Pehle samajh lein:</strong> Firebase ki keys (<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">firebase-config.js</span>) public hona <strong style="color: #c8cfd8;">normal aur safe</strong> hai — har website mein aisi hi hoti hain. Asli hifazat <strong style="color: #c8cfd8;">Rules + Authentication</strong> se aati hai (jo server par lagti hai), file chhupane se nahi.
+      </div>
+
+      <div style="margin-top: 18px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">CONSOLE MEIN YEH 4 KAAM</div>
+        <div style="display: flex; flex-direction: column; gap: 11px; font-size: 14px; line-height: 1.65; color: #9aa3ad;">
+          <div><strong style="color: #e8eaed;">a)</strong> <strong style="color: #c8cfd8;">Build → Realtime Database</strong> enable karein (agar pehle se nahi).</div>
+          <div><strong style="color: #e8eaed;">b)</strong> <strong style="color: #c8cfd8;">Build → Storage</strong> enable karein (intern files ke liye).</div>
+          <div><strong style="color: #e8eaed;">c)</strong> <strong style="color: #c8cfd8;">Build → Authentication → Get started → Sign-in method</strong> mein <strong style="color: #c8cfd8;">Email/Password</strong> ko <strong style="color: #7ee2a8;">Enable</strong> karein. Phir <strong style="color: #c8cfd8;">Users → Add user</strong> se apna admin <strong style="color: #c8cfd8;">email + password</strong> banayein. <span style="color: #7ee2a8;">Yehi se admin panel khulega.</span></div>
+          <div><strong style="color: #e8eaed;">d)</strong> Neeche di gayi <strong style="color: #c8cfd8;">Rules</strong> Database aur Storage dono mein paste karke <strong style="color: #c8cfd8;">Publish</strong> karein.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 8px;">REALTIME DATABASE → RULES (copy/paste)</div>
+        <pre style="margin: 0; background: #0b1016; border: 1px solid #1f2733; border-radius: 12px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #c8cfd8; overflow-x: auto; line-height: 1.6;">{
+  "rules": {
+    "contactMessages": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null || (!data.exists() &amp;&amp; newData.exists())",
+        ".validate": "newData.hasChildren(['name','message'])"
+      }
+    },
+    "internSubmissions": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null || (!data.exists() &amp;&amp; newData.exists())",
+        ".validate": "newData.hasChildren(['name'])"
+      }
+    },
+    "meta": {
+      "storageUsed": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.isNumber()"
+      }
+    }
+  }
+}</pre>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 8px;">STORAGE → RULES (copy/paste)</div>
+        <pre style="margin: 0; background: #0b1016; border: 1px solid #1f2733; border-radius: 12px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #c8cfd8; overflow-x: auto; line-height: 1.6;">rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /intern-uploads/{fileName} {
+      allow read, delete: if request.auth != null;
+      allow create: if request.resource.size &lt; 30 * 1024 * 1024;
+    }
+  }
+}</pre>
+      </div>
+
+      <div style="margin-top: 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 12px; padding: 18px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 12px;">YEH RULES KYA KARTI HAIN?</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; font-size: 13.5px; line-height: 1.65; color: #9aa3ad;">
+          <div>• <strong style="color: #7ee2a8;">SUBMIT (write):</strong> koi bhi visitor contact form aur intern form bhar sakta hai — nayi entry ban jaati hai. ✅</div>
+          <div>• <strong style="color: #d08770;">READ / DELETE:</strong> koi visitor messages ya submissions <strong style="color: #c8cfd8;">na parh sakta hai, na badal/delete kar sakta hai</strong>. Sirf <span style="color: #c8cfd8;">logged-in admin</span> (<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">auth != null</span>). 🔒</div>
+          <div>• <strong style="color: #c8cfd8;">Files:</strong> visitor sirf <strong style="color: #c8cfd8;">30 MB tak</strong> file upload kar sakta hai; parhna/delete sirf admin. Files ka download link bhi sirf admin ke andar banta hai.</div>
+          <div>• <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">meta/storageUsed</span> sirf ek number hai (storage gauge) — koi private data nahi.</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; background: rgba(208,135,112,0.07); border: 1px solid rgba(208,135,112,0.35); border-radius: 12px; padding: 14px 18px; font-size: 13.5px; line-height: 1.65; color: #d08770;">
+        <strong>Khayal rahe:</strong> Authentication mein <strong>Email/Password</strong> ke ilawa koi aur sign-in method enable na karein, aur naya "Add user" sirf aap karein. Iske bina koi admin nahi ban sakta. Apna password kisi ko na batayein.
+      </div>
+    </div>
+
+    <!-- ── 6. ADMIN ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">6</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Admin Panel</h2>
+      </div>
+      <div style="margin-top: 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 22px 24px; font-size: 14.5px; line-height: 1.8; color: #9aa3ad;">
+        <div>• Admin ek hi standalone file hai — <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7ee2a8;">Alamza Admin.html</span> — jo ab <strong style="color: #c8cfd8;">website ke saath hi public folder</strong> mein rehti hai.</div>
+        <div style="margin-top: 8px;">• Isse kholne ke 2 tarike: (1) website ke <strong style="color: #c8cfd8;">footer mein “ADMIN”</strong> link, ya (2) seedha <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">your-site.com/Alamza Admin.html</span>.</div>
+        <div style="margin-top: 8px;">• <strong style="color: #c8cfd8;">Login email + password</strong> se hota hai — wohi jo aapne Firebase console (Step 5c) mein banaya. <strong style="color: #c8cfd8;">Koi default password nahi.</strong> Login ke baghair andar ka kuch nahi khulta.</div>
+        <div style="margin-top: 8px;">• <strong style="color: #c8cfd8;">Password bhool gaye?</strong> Login screen par usi naam ka link hai — ya seedha Firebase console → <strong style="color: #c8cfd8;">alamza-web → Authentication → Users</strong> mein apne user ka password reset kar dein.</div>
+        <div style="margin-top: 8px;">• File ke top par <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #5b9bff;">ALAMZA_WEBSITE_URL</span> mein apni live website ka link daalein (“OPEN WEBSITE” button ke liye).</div>
+        <div style="margin-top: 8px;">• <strong style="color: #c8cfd8;">Settings</strong> tab se apna password kabhi bhi badal sakte hain. <strong style="color: #c8cfd8;">Messages</strong>: contact messages + WhatsApp reply. <strong style="color: #c8cfd8;">Intern Submissions</strong>: details, files (download/delete) aur diye gaye links.</div>
+      </div>
+    </div>
+
+    <!-- ── 7. DEPLOY: KAUN SI FILE KAHAN ── -->
+    <div style="margin-top: 48px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #0b0e13; background: #5b9bff; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">7</span>
+        <h2 style="margin: 0; font-size: 23px; font-weight: 800; color: #e8eaed;">Deploy karna — kaun si file kahan</h2>
+      </div>
+      <p style="margin: 16px 0 16px; font-size: 15px; line-height: 1.7; color: #9aa3ad;">Aasaan usool: <strong style="color: #c8cfd8;">poora folder public host par upload kar dein — sirf yeh guide chhod kar.</strong> Admin bhi public folder mein rehta hai; uska taala login hai, na ke file chhupana.</p>
+
+      <div style="background: #11161d; border: 1px solid rgba(126,226,168,0.3); border-radius: 14px; overflow: hidden; margin-bottom: 16px;">
+        <div style="padding: 13px 20px; border-bottom: 1px solid #1a212b; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #7ee2a8;">PUBLIC — YEH SAB UPLOAD KAREIN (ek hi folder)</div>
+        <div style="padding: 14px 20px; font-size: 13.5px; line-height: 1.95; color: #9aa3ad;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">Alamza Industry.dc.html</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">Alamza Admin.html</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">Admin Panel.dc.html</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">alamza-admin-core.js</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">support.js</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">site-content.js</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">firebase-config.js</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #c8cfd8;">site-data.json</span> &nbsp;·&nbsp;
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7ee2a8;">assets/ (saari images)</span>
+          <div style="margin-top: 8px; color: #79828c; font-size: 12.5px;">Poora folder kisi bhi static host par daal dein (Firebase Hosting / Netlify / GitHub Pages / cPanel).</div>
+        </div>
+      </div>
+
+      <div style="background: #11161d; border: 1px solid rgba(208,135,112,0.35); border-radius: 14px; overflow: hidden; margin-bottom: 16px;">
+        <div style="padding: 13px 20px; border-bottom: 1px solid #1a212b; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #d08770;">GUIDE — AB ADMIN KE ANDAR (login ke baad)</div>
+        <div style="padding: 14px 20px; font-size: 13.5px; line-height: 1.8; color: #9aa3ad;">
+          <div>Yeh guide ab kisi alag file mein nahi — seedha <strong style="color: #c8cfd8;">Admin Panel ke GUIDE tab</strong> mein hai, jo sirf login ke baad khulta hai. Is mein koi password/secret nahi, isliye koi security issue nahi. Sab kuch public deploy kar sakte hain.</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(91,155,255,0.06); border: 1px solid rgba(91,155,255,0.25); border-radius: 12px; padding: 14px 18px; font-size: 13.5px; line-height: 1.7; color: #9aa3ad;">
+        <strong style="color: #c8cfd8;">Security ki asli baat:</strong> Admin public folder mein hone ke bawajood mehfooz hai, kyunke uska taala <strong style="color: #c8cfd8;">Firebase Email/Password login + Rules</strong> hai (Step 5). Chahe koi admin file khol bhi le, aapke login ke baghair woh <strong style="color: #c8cfd8;">koi data nahi parh ya delete kar sakta</strong> — sirf form submit ho sakta hai.
+      </div>
+
+      <div style="margin-top: 16px; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 20px 22px; font-size: 14px; line-height: 1.8; color: #9aa3ad;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #79828c; margin-bottom: 8px;">SPEED</div>
+        <div>Website ka text, photos aur design sab static hain — pehla paint bohat tez. Firebase ka code page khulne ke <em>baad</em> background mein load hota hai, sirf forms ke liye.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 52px; border-top: 1px solid #1a212b; padding-top: 22px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+      <span style="color: #5e6b7a; font-size: 13px;">Alamza Industry — Setup Guide</span>
+      <a href="Alamza Industry.dc.html" style="color: #5b9bff; font-size: 13px; text-decoration: none;">Website kholen →</a>
+    </div>
+
+  </div>
+</div>
+        </sc-if>
+
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    authReady: false,
+    authed: false,
+    adminEmail: "",
+    loggingIn: false,
+    showForgot: false,
+    tab: "messages",
+    messages: [],
+    subs: [],
+    fbReady: null,
+    loginStatus: "", passStatus: ""
+  };
+
+  componentDidMount() {
+    var self = this;
+    var boot = function () {
+      var A = window.ALAMZA;
+      if (!A) { setTimeout(boot, 80); return; }
+      A.ensureFirebase().then(function (fb) {
+        self.fb = fb;
+        self.setState({ fbReady: !!fb });
+        if (!fb) { self.setState({ authReady: true }); return; }
+        // Firebase Authentication: login state ka asli source.
+        fb.auth().onAuthStateChanged(function (user) {
+          if (user) {
+            self.setState({ authed: true, authReady: true, adminEmail: user.email || "", loginStatus: "" });
+            self.attach(fb);
+          } else {
+            self.setState({ authed: false, authReady: true, adminEmail: "" });
+          }
+        });
+      });
+    };
+    boot();
+  }
+
+  authError(err) {
+    var code = err && err.code ? err.code : "";
+    if (code === "auth/invalid-email") return "Email theek nahi hai.";
+    if (code === "auth/user-disabled") return "Yeh account disabled hai.";
+    if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential")
+      return "Email ya password ghalat hai.";
+    if (code === "auth/too-many-requests") return "Bohat zyada koshishein \u2014 thodi der baad try karein.";
+    if (code === "auth/network-request-failed") return "Internet connection check karein.";
+    if (code === "auth/operation-not-allowed" || code === "auth/configuration-not-found")
+      return "Email/Password sign-in Firebase console mein enable nahi hai \u2014 Authentication \u2192 Sign-in method se Enable karein.";
+    return "Login nahi ho saka \u2014 dobara koshish karein.";
+  }
+
+  attach(fb) {
+    var self = this;
+    if (this._attached) return;
+    this._attached = true;
+    fb.database().ref("contactMessages").on("value", function (snap) {
+      var v = snap.val() || {};
+      var arr = Object.keys(v).map(function (k) { return Object.assign({ id: k }, v[k]); });
+      arr.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      self.setState({ messages: arr });
+    });
+    fb.database().ref("internSubmissions").on("value", function (snap) {
+      var v = snap.val() || {};
+      var arr = Object.keys(v).map(function (k) { return Object.assign({ id: k }, v[k]); });
+      arr.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      self.setState({ subs: arr });
+      // Storage counter ko asli total ke barabar kar do (admin authed hai to allowed).
+      // Isse website ka upload-gate hamesha sahi rehta hai, aur delete ke baad bhi theek ho jata hai.
+      var total = 0;
+      arr.forEach(function (u) { total += (u.totalSize || 0); });
+      try { fb.database().ref("meta/storageUsed").set(total); } catch (e) {}
+    });
+  }
+
+  doLogin = (e) => {
+    e.preventDefault();
+    var self = this;
+    var em = String(e.target.aem.value || "").trim();
+    var pw = e.target.apw.value;
+    if (!em || !pw) { this.setState({ loginStatus: "Email aur password dono likhein." }); return; }
+    if (!this.fb) { this.setState({ loginStatus: "Firebase connect nahi hua \u2014 keys check karein." }); return; }
+    this.setState({ loggingIn: true, loginStatus: "Logging in\u2026" });
+    this.fb.auth().signInWithEmailAndPassword(em, pw).then(function () {
+      // onAuthStateChanged authed kar dega.
+      self.setState({ loggingIn: false, loginStatus: "" });
+    }).catch(function (err) {
+      self.setState({ loggingIn: false, loginStatus: self.authError(err) });
+    });
+  };
+
+  logout = () => {
+    if (this.fb) this.fb.auth().signOut();
+    this.setState({ authed: false, tab: "messages" });
+  };
+
+  toggleForgot = () => this.setState({ showForgot: !this.state.showForgot });
+
+  openFile = (e) => {
+    var btn = e.currentTarget || e.target;
+    var url = btn.getAttribute("data-url");
+    var path = btn.getAttribute("data-path");
+    if (url) { window.open(url, "_blank", "noopener"); return; }
+    if (path && this.fb) {
+      this.fb.storage().ref(path).getDownloadURL().then(function (u) {
+        window.open(u, "_blank", "noopener");
+      }).catch(function () { window.alert("File abhi khul nahi saki \u2014 dobara koshish karein."); });
+    }
+  };
+
+  tabM = () => this.setState({ tab: "messages" });
+  tabI = () => this.setState({ tab: "interns" });
+  tabS = () => this.setState({ tab: "settings" });
+  tabG = () => this.setState({ tab: "guide" });
+
+  markRead = (e) => {
+    var id = e.target.getAttribute("data-id");
+    if (this.fb && id) this.fb.database().ref("contactMessages/" + id + "/read").set(true);
+  };
+
+  delMsg = (e) => {
+    var id = e.target.getAttribute("data-id");
+    if (!id || !this.fb) return;
+    if (window.confirm("Yeh message delete karna hai?")) {
+      this.fb.database().ref("contactMessages/" + id).remove();
+    }
+  };
+
+  delSub = (e) => {
+    var id = e.target.getAttribute("data-id");
+    var paths = (e.target.getAttribute("data-paths") || "").split("|").filter(Boolean);
+    if (!id || !this.fb) return;
+    if (!window.confirm("Yeh submission aur iski saari files hamesha ke liye delete ho jayengi. Pakka?")) return;
+    var fb = this.fb;
+    paths.forEach(function (p) {
+      fb.storage().ref(p).delete().catch(function () {});
+    });
+    fb.database().ref("internSubmissions/" + id).remove();
+  };
+
+  savePass = (e) => {
+    e.preventDefault();
+    var self = this;
+    var pw = e.target.npw.value;
+    if (!pw || pw.length < 6) { this.setState({ passStatus: "Password kam az kam 6 characters ka ho." }); return; }
+    var user = this.fb ? this.fb.auth().currentUser : null;
+    if (!user) { this.setState({ passStatus: "Pehle login karein." }); return; }
+    var form = e.target;
+    this.setState({ passStatus: "Updating\u2026" });
+    user.updatePassword(pw).then(function () {
+      form.reset();
+      self.setState({ passStatus: "Password update ho gaya \u2713" });
+    }).catch(function (err) {
+      if (err && err.code === "auth/requires-recent-login") {
+        self.setState({ passStatus: "Security ke liye dobara login zaroori \u2014 logout karke phir login karein, phir password badlein." });
+      } else if (err && err.code === "auth/weak-password") {
+        self.setState({ passStatus: "Password thoda mazboot rakhein (6+ characters)." });
+      } else {
+        self.setState({ passStatus: "Update fail ho gaya \u2014 dobara koshish karein." });
+      }
+    });
+  };
+
+  tabStyle(active) {
+    return {
+      fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: "1.5px",
+      padding: "12px 16px", cursor: "pointer", whiteSpace: "nowrap", userSelect: "none",
+      color: active ? "#5b9bff" : "#79828c",
+      borderBottom: active ? "2px solid #5b9bff" : "2px solid transparent"
+    };
+  }
+
+  renderVals() {
+    var s = this.state;
+    var A = window.ALAMZA;
+
+    var messages = s.messages.map(function (m) {
+      var digits = (m.phone || "").replace(/[^0-9]/g, "");
+      if (digits.length === 11 && digits.charAt(0) === "0") digits = "92" + digits.slice(1);
+      return {
+        id: m.id, name: m.name || "(no name)",
+        phone: m.phone || "\u2014", email: m.email || "\u2014",
+        message: m.message || "", date: A ? A.fmtDate(m.ts) : "",
+        isNew: !m.read, hasPhone: digits.length > 9,
+        wa: "https://wa.me/" + digits
+      };
+    });
+    var newCount = messages.filter(function (m) { return m.isNew; }).length;
+
+    var totalBytes = 0;
+    var subs = s.subs.map(function (u) {
+      totalBytes += (u.totalSize || 0);
+      var files = (u.files || []).map(function (fl) {
+        return {
+          fileName: fl.fileName || "file",
+          sizeLabel: A ? A.fmtBytes(fl.size) : "",
+          url: fl.url || "",
+          path: fl.path || ""
+        };
+      });
+      var info = [];
+      var push = function (l, v) { if (v) info.push({ l: l, v: v }); };
+      push("EMAIL", u.email);
+      push("PHONE", u.phone);
+      push("CNIC", u.cnic);
+      push("CITY", u.city);
+      push("INSTITUTE", u.institute);
+      push("FIELD OF STUDY", u.field);
+      push("DURATION", u.duration);
+      push("SUPERVISOR", u.supervisor);
+      return {
+        id: u.id,
+        name: u.name || "(no name)",
+        dept: u.dept || "\u2014",
+        date: A ? A.fmtDate(u.ts) : "",
+        note: u.note || "\u2014",
+        info: info,
+        links: (u.links || []),
+        hasLinks: !!(u.links && u.links.length),
+        files: files,
+        paths: files.map(function (fl) { return fl.path; }).join("|")
+      };
+    });
+    var usagePct = Math.min(100, Math.round((totalBytes / (100 * 1024 * 1024)) * 100));
+
+    var fbBadgeBase = {
+      fontFamily: "'JetBrains Mono', monospace", fontSize: "9.5px", letterSpacing: "1.5px",
+      padding: "4px 10px", borderRadius: "100px", fontWeight: 600
+    };
+    var fbBadgeStyle, fbBadgeText;
+    if (s.fbReady === true) {
+      fbBadgeText = "FIREBASE CONNECTED";
+      fbBadgeStyle = Object.assign({}, fbBadgeBase, { color: "#7ee2a8", border: "1px solid rgba(126,226,168,0.4)" });
+    } else if (s.fbReady === false) {
+      fbBadgeText = "NOT CONNECTED";
+      fbBadgeStyle = Object.assign({}, fbBadgeBase, { color: "#d08770", border: "1px solid rgba(208,135,112,0.4)" });
+    } else {
+      fbBadgeText = "CHECKING\u2026";
+      fbBadgeStyle = Object.assign({}, fbBadgeBase, { color: "#79828c", border: "1px solid #2b3340" });
+    }
+
+    return {
+      showLoading: !s.authReady,
+      showLogin: s.authReady && !s.authed,
+      authed: s.authed,
+      loggingIn: s.loggingIn,
+      adminEmail: s.adminEmail || "\u2014",
+      openFile: this.openFile,
+      websiteUrl: (typeof window !== "undefined" && window.ALAMZA_WEBSITE_URL) ? window.ALAMZA_WEBSITE_URL : "#",
+      doLogin: this.doLogin, loginStatus: s.loginStatus,
+      showForgot: s.showForgot, toggleForgot: this.toggleForgot,
+      logout: this.logout,
+      fbBadgeText: fbBadgeText, fbBadgeStyle: fbBadgeStyle,
+      fbMissing: s.fbReady === false,
+      isMessages: s.tab === "messages", isInterns: s.tab === "interns", isSettings: s.tab === "settings", isGuide: s.tab === "guide",
+      tabM: this.tabM, tabI: this.tabI, tabS: this.tabS, tabG: this.tabG,
+      tsM: this.tabStyle(s.tab === "messages"), tsI: this.tabStyle(s.tab === "interns"), tsS: this.tabStyle(s.tab === "settings"), tsG: this.tabStyle(s.tab === "guide"),
+      newBadge: newCount > 0 ? " (" + newCount + ")" : "",
+      messages: messages, noMessages: messages.length === 0,
+      msgCountLabel: messages.length + " total \u00b7 " + newCount + " new",
+      markRead: this.markRead, delMsg: this.delMsg,
+      subs: subs, noSubs: subs.length === 0,
+      subCountLabel: subs.length + " submission(s)",
+      usagePctW: usagePct + "%",
+      usageLabel: (A ? A.fmtBytes(totalBytes) : "0 B") + " / 100 MB",
+      delSub: this.delSub,
+      savePass: this.savePass, passStatus: s.passStatus
+    };
+  }
+}
+</script>
+</body>
+</html>
