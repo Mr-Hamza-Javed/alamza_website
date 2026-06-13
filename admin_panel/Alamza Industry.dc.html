@@ -26,10 +26,19 @@
       [data-mobile-menu] { display: flex !important; }
     }
     @media (max-width: 760px) {
-      [data-hero-3d] { display: none !important; }
+      /* Hero blueprint viewport STAYS visible on mobile — compact, framed, decluttered */
+      [data-hero-3d] { display: flex !important; height: 330px; margin-top: 20px; border: 1px solid #1a2230; border-radius: 16px; background: radial-gradient(125% 92% at 50% 0%, rgba(91,155,255,0.08), transparent 62%), #0c1016; }
+      [data-hero-part] { padding: 40px !important; }
+      [data-hero-dim] { display: none !important; }
+      [data-scan] { left: 28px !important; right: 28px !important; }
     }
     /* Showcase: single column + text-first on mobile/tablet; 2-col + alternating on desktop */
     [data-sc-panel] { grid-template-columns: 1fr; }
+    [data-sc-topblend] { display: none; }
+    @media (max-width: 859px) {
+      /* stacked layout — blend the image top & bottom into the card, matching the side blend */
+      [data-sc-topblend] { display: block !important; }
+    }
     @media (min-width: 860px) {
       [data-sc-panel] { grid-template-columns: 1fr 1fr; }
       [data-sc-list] > [data-sc-panel]:nth-child(even) { direction: rtl; }
@@ -38,10 +47,76 @@
     @media (max-width: 600px) {
       [data-sc-code] { display: none !important; }
     }
+
+    /* ═══ entrance / motion ═══ */
+    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatPart { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
+    @keyframes heroGlow { 0%, 100% { opacity: .5; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .85; transform: translate(-50%, -50%) scale(1.07); } }
+    @keyframes scanSweep { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(360px); opacity: 0; } }
+    @keyframes preExit { 0%, 60% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+    @keyframes preBar { from { width: 0; } to { width: 100%; } }
+    @keyframes preMark { from { opacity: 0; transform: scale(.82) rotate(-7deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    @keyframes sheen { from { left: -130%; } to { left: 150%; } }
+    @keyframes menuDrop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* hero entrance is JS-driven (componentDidMount) so content is guaranteed to reveal */
+    [data-hero-part] { animation: floatPart 6.5s ease-in-out infinite; will-change: transform; }
+
+    /* nav underline */
+    [data-desktop-nav] a { position: relative; }
+    [data-desktop-nav] a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -6px; height: 1.5px; background: #5b9bff; transition: right .32s cubic-bezier(.22,.61,.36,1); }
+    [data-desktop-nav] a:hover::after { right: 0; }
+
+    /* product cards */
+    [data-card] img { transition: transform .6s cubic-bezier(.22,.61,.36,1); }
+    [data-card]:hover img { transform: scale(1.07); }
+    [data-code-badge] { transition: transform .35s ease, background .35s ease, border-color .35s ease; }
+    [data-card]:hover [data-code-badge] { transform: translateY(-2px); background: rgba(91,155,255,0.18); border-color: rgba(91,155,255,0.7); }
+
+    /* showcase */
+    [data-sc-panel] img { transition: transform .8s cubic-bezier(.22,.61,.36,1), filter .5s ease; }
+    [data-sc-panel]:hover img { transform: scale(1.045); filter: contrast(1.08) saturate(1.02) brightness(1.02); }
+
+    /* team cards */
+    [data-team-card] { transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+    [data-team-card]:hover { transform: translateY(-5px); border-color: rgba(91,155,255,0.5); box-shadow: 0 18px 38px rgba(0,0,0,0.4); }
+    [data-team-card] img { transition: transform .6s cubic-bezier(.22,.61,.36,1); }
+    [data-team-card]:hover img { transform: scale(1.06); }
+
+    /* gallery */
+    [data-gallery-cell] img { transition: transform .65s cubic-bezier(.22,.61,.36,1); }
+    [data-gallery-cell]:hover img { transform: scale(1.08); }
+
+    /* button sheen */
+    [data-shine] { position: relative; overflow: hidden; }
+    [data-shine]::after { content: ""; position: absolute; top: 0; left: -130%; width: 65%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-18deg); pointer-events: none; }
+    [data-shine]:hover::after { animation: sheen .9s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-hero-col] > *, [data-hero-3d], [data-hero-part], [data-scan], [data-hero-glow], [data-preloader] { animation: none !important; }
+      [data-hero-col] > *, [data-hero-3d] { opacity: 1 !important; transform: none !important; }
+      [data-preloader] { display: none !important; }
+    }
   </style>
 </helmet>
 
 <div style="background: #0b0e13; font-family: Archivo, sans-serif; color: #e8eaed; overflow-x: hidden;">
+
+  <!-- ═══════════ PRELOADER ═══════════ -->
+  <sc-if value="{{ showPre }}" hint-placeholder-val="{{ true }}">
+  <div data-preloader="" style="position: fixed; inset: 0; z-index: 200; background: #0b0e13; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; animation: preExit 1.35s ease forwards;">
+    <div style="position: relative; width: 74px; height: 74px; display: flex; align-items: center; justify-content: center;">
+      <div style="position: absolute; inset: 0; border-radius: 18px; border: 2px solid rgba(91,155,255,0.16); border-top-color: #5b9bff; animation: spinRing 0.9s linear infinite;"></div>
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 25px; color: #0b0e13; animation: preMark .55s both;">A</div>
+    </div>
+    <div style="font-weight: 800; letter-spacing: 2px; font-size: 15px; color: #e8eaed;">ALAMZA <span style="color: #5b9bff;">INDUSTRY</span></div>
+    <div style="width: 178px; height: 3px; border-radius: 100px; background: #1a212b; overflow: hidden;">
+      <div style="height: 100%; border-radius: 100px; background: linear-gradient(90deg, #5b9bff, #2563eb); animation: preBar 1.05s ease both;"></div>
+    </div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: #5e6b7a;">PRECISION ENGINEERING</div>
+  </div>
+  </sc-if>
 
   <!-- ═══════════ NAV ═══════════ -->
   <div style="position: sticky; top: 0; z-index: 60; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(11,14,19,0.85); border-bottom: 1px solid rgba(255,255,255,0.07)">
@@ -64,7 +139,7 @@
       <a data-desktop-cta="" href="#contact" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #5b9bff; border: 1px solid rgba(91,155,255,0.45); padding: 9px 18px; border-radius: 6px; text-decoration: none; white-space: nowrap;" style-hover="background: rgba(91,155,255,0.12);">GET A QUOTE</a>
       <div data-mobile-menu="" onClick="{{ toggleNav }}" style="align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: #5b9bff; border: 1px solid rgba(91,155,255,0.45); padding: 9px 16px; border-radius: 6px; cursor: pointer; user-select: none;">MENU</div>
       <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
-        <div style="position: absolute; top: 100%; left: 0; right: 0; background: #0d1117; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; padding: 8px 0 14px; box-shadow: 0 30px 50px rgba(0,0,0,0.5);">
+        <div style="position: absolute; top: 100%; left: 0; right: 0; background: #0d1117; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; padding: 8px 0 14px; box-shadow: 0 30px 50px rgba(0,0,0,0.5); transform-origin: top; animation: menuDrop .28s cubic-bezier(.22,.61,.36,1) both;">
           <a href="#products" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">PRODUCTS</a>
           <a href="#showcase" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">SHOWCASE</a>
           <a href="#about" onClick="{{ closeNav }}" style="color: #c8cfd8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1.5px; padding: 13px 28px;">ABOUT</a>
@@ -80,7 +155,7 @@
   <!-- ═══════════ HERO ═══════════ -->
   <div id="top" data-screen-label="Hero" style="background-color: #0b0e13; background-image: linear-gradient(rgba(91,155,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.05) 1px, transparent 1px); background-size: 48px 48px; border-bottom: 1px solid rgba(255,255,255,0.06); position: static">
     <div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: clamp(44px, 6.5vw, 80px) clamp(24px, 5vw, 60px) clamp(40px, 6vw, 70px); align-items: center;">
-      <div>
+      <div data-hero-col="">
         <div style="display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #5b9bff;">
           <span style="width: 8px; height: 8px; border-radius: 50%; background: #5b9bff; box-shadow: 0 0 12px #5b9bff; animation: dcPulse 2.4s ease-in-out infinite; flex-shrink: 0;"></span>
           <span>{{ c.hero.eyebrow }}</span>
@@ -88,7 +163,7 @@
         <h1 style="margin: 20px 0 18px; font-family: Anton, sans-serif; font-weight: 400; font-size: clamp(48px, 7vw, 92px); line-height: 0.97; letter-spacing: 1px; background: linear-gradient(180deg, #f4f6f8 18%, #aeb6c0 48%, #5d6670 72%, #98a2ad); -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance;">{{ c.hero.title }}</h1>
         <p style="margin: 0 0 28px; color: #9aa3ad; font-size: clamp(15px, 1.4vw, 17px); line-height: 1.65; max-width: 520px; text-wrap: pretty;">{{ c.hero.sub }}</p>
         <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#products" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 26px; border-radius: 8px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;" style-hover="transform: translateY(-2px); box-shadow: 0 14px 30px rgba(37,99,235,0.45);">{{ c.hero.ctaPrimary }}</a>
+          <a href="#products" data-shine="" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 26px; border-radius: 8px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;" style-hover="transform: translateY(-2px); box-shadow: 0 14px 30px rgba(37,99,235,0.45);">{{ c.hero.ctaPrimary }}</a>
           <a href="{{ waHref }}" target="_blank" rel="noopener" style="border: 1px solid #2b3340; color: #c8cfd8; font-weight: 600; font-size: 14.5px; padding: 14px 26px; border-radius: 8px; text-decoration: none; transition: border-color 0.2s ease;" style-hover="border-color: #5b9bff;">{{ c.hero.ctaSecondary }}</a>
         </div>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 36px; background: #232a33; border: 1px solid #232a33; border-radius: 12px; overflow: hidden; max-width: 430px;">
@@ -109,25 +184,27 @@
 
       <!-- hero 3D viewport (mobile par hidden — showcase section mein valve dobara aata hai) -->
       <div data-hero-3d="" style="position: relative; height: clamp(380px, 44vw, 470px); display: flex; align-items: center; justify-content: center;">
+        <div data-hero-glow="" style="position: absolute; left: 50%; top: 50%; width: 64%; height: 64%; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(91,155,255,0.22), rgba(91,155,255,0.05) 55%, transparent 72%); filter: blur(6px); animation: heroGlow 6s ease-in-out infinite; pointer-events: none;"></div>
         <div style="position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-top: 1px solid rgba(91,155,255,0.6); border-left: 1px solid rgba(91,155,255,0.6);"></div>
         <div style="position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-top: 1px solid rgba(91,155,255,0.6); border-right: 1px solid rgba(91,155,255,0.6);"></div>
         <div style="position: absolute; bottom: 8px; left: 8px; width: 26px; height: 26px; border-bottom: 1px solid rgba(91,155,255,0.6); border-left: 1px solid rgba(91,155,255,0.6);"></div>
         <div style="position: absolute; bottom: 8px; right: 8px; width: 26px; height: 26px; border-bottom: 1px solid rgba(91,155,255,0.6); border-right: 1px solid rgba(91,155,255,0.6);"></div>
         <div style="position: absolute; top: 16px; left: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #5b9bff;">{{ c.hero.partCode }}</div>
-        <div style="position: absolute; top: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #4a5260;">SECTION VIEW</div>
+        <div data-hero-dim="" style="position: absolute; top: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: #4a5260;">SECTION VIEW</div>
         <span data-ph="" style="position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #5e6b7a">[ hero-part.png ]</span>
-        <img src="assets/hero-part.png" alt="Engine valve" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; box-sizing: border-box;">
-        <div style="position: absolute; right: 30px; top: 64px; bottom: 96px; width: 1px; background: rgba(91,155,255,0.45);">
+        <img src="assets/hero-part.png" alt="Engine valve" data-hero-part="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; box-sizing: border-box;">
+        <div data-hero-dim="" style="position: absolute; right: 30px; top: 64px; bottom: 96px; width: 1px; background: rgba(91,155,255,0.45);">
           <div style="position: absolute; top: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid rgba(91,155,255,0.8);"></div>
           <div style="position: absolute; bottom: -1px; left: -3.5px; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid rgba(91,155,255,0.8);"></div>
           <div style="position: absolute; top: 50%; left: -9px; transform: translateY(-50%); writing-mode: vertical-rl; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #5b9bff; background: #0b0e13; padding: 8px 0;">OAL · 90.0</div>
         </div>
-        <div style="position: absolute; top: 110px; left: 14px; display: flex; align-items: center; gap: 8px;">
+        <div data-hero-dim="" style="position: absolute; top: 110px; left: 14px; display: flex; align-items: center; gap: 8px;">
           <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff;">Ø STEM · 5.0</span>
           <span style="width: 44px; height: 1px; background: rgba(91,155,255,0.5);"></span>
         </div>
         <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #5b9bff; white-space: nowrap;">{{ c.hero.partLabel }}</div>
         <div style="position: absolute; bottom: 16px; right: 18px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #4a5260; display: none">NOT TO SCALE</div>
+        <div data-scan="" style="position: absolute; left: 44px; right: 44px; top: 40px; height: 2px; background: linear-gradient(90deg, transparent, rgba(91,155,255,0.65), transparent); box-shadow: 0 0 12px rgba(91,155,255,0.5); animation: scanSweep 5s ease-in-out infinite; pointer-events: none;"></div>
       </div>
     </div>
   </div>
@@ -141,11 +218,11 @@
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="3">
-        <div data-reveal="" style="position: relative; background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease;" style-hover="transform: translateY(-5px); border-color: rgba(91,155,255,0.5);">
+        <div data-reveal="" data-card="" style="position: relative; background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;" style-hover="transform: translateY(-5px); border-color: rgba(91,155,255,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
           <div data-ph-bg="" style="position: relative; height: 190px; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #5e6b7a; letter-spacing: 1px;">
             <span data-ph="">{{ p.ph }}</span>
             <img src="{{ p.img }}" alt="{{ p.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
-            <span style="position: absolute; top: 12px; left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff; background: rgba(11,14,19,0.85); border: 1px solid rgba(91,155,255,0.35); padding: 4px 9px; border-radius: 5px;">{{ p.code }}</span>
+            <span data-code-badge="" style="position: absolute; top: 12px; left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: #5b9bff; background: rgba(11,14,19,0.85); border: 1px solid rgba(91,155,255,0.35); padding: 4px 9px; border-radius: 5px;">{{ p.code }}</span>
           </div>
           <div style="padding: 20px 22px 22px;">
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5b9bff; letter-spacing: 2px;">{{ p.num }}</div>
@@ -186,6 +263,7 @@
             <div style="{{ it.scrimStyle }}"></div>
             <div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 110px 36px #0e1319;"></div>
             <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #0e1319 0%, rgba(14,19,25,0.5) 10%, rgba(14,19,25,0) 30%, rgba(14,19,25,0) 70%, rgba(14,19,25,0.5) 90%, #0e1319 100%);"></div>
+            <div data-sc-topblend="" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #0e1319 0%, rgba(14,19,25,0.55) 9%, rgba(14,19,25,0) 27%, rgba(14,19,25,0) 73%, rgba(14,19,25,0.55) 91%, #0e1319 100%);"></div>
             <div data-sc-code="" style="position: absolute; bottom: 14px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: #6b7682; z-index: 3;">{{ it.code }}</div>
           </div>
         </div>
@@ -258,7 +336,7 @@
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px;">
       <sc-for list="{{ team }}" as="m" hint-placeholder-count="4">
-        <div data-reveal="" style="background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
+        <div data-reveal="" data-team-card="" style="background: #0f141b; border: 1px solid #1f2733; border-radius: 14px; overflow: hidden;">
           <div data-ph-bg="" style="position: relative; aspect-ratio: 1 / 1.05; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5e6b7a;">
             <span data-ph="">{{ m.ph }}</span>
             <img src="{{ m.img }}" alt="{{ m.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
@@ -282,7 +360,7 @@
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
       <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="3">
-        <div data-reveal="" data-ph-bg="" style="position: relative; height: 200px; border-radius: 12px; overflow: hidden; border: 1px solid #1f2733; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #5e6b7a;">
+        <div data-reveal="" data-gallery-cell="" data-ph-bg="" style="position: relative; height: 200px; border-radius: 12px; overflow: hidden; border: 1px solid #1f2733; background: repeating-linear-gradient(45deg, rgba(91,155,255,0.07) 0 12px, rgba(91,155,255,0.02) 12px 24px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #5e6b7a;">
           <span data-ph="">{{ g.ph }}</span>
           <img src="{{ g.img }}" alt="{{ g.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
         </div>
@@ -347,7 +425,7 @@
           <textarea id="cmsg" name="cmsg" rows="5" placeholder="e.g. 200 cylinder sleeves, 53 mm bore…" style="background: #0b1016; border: 1px solid #232b36; border-radius: 8px; padding: 13px 15px; color: #e8eaed; font-family: Archivo, sans-serif; font-size: 14.5px; outline: none; resize: vertical; width: 100%; box-sizing: border-box;" style-focus="border-color: #5b9bff;"></textarea>
         </div>
         <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
-          <button type="submit" disabled="{{ sending }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">Send Message</button>
+          <button type="submit" data-shine="" disabled="{{ sending }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">Send Message</button>
           <span style="color: #9aa3ad; font-size: 14px;">{{ msgStatus }}</span>
         </div>
       </form>
@@ -455,7 +533,7 @@
         </sc-if>
 
         <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
-          <button type="submit" disabled="{{ uploading }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">{{ submitText }}</button>
+          <button type="submit" data-shine="" disabled="{{ uploading }}" style="background: linear-gradient(135deg, #5b9bff, #2563eb); color: #fff; font-weight: 700; font-size: 14.5px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: Archivo, sans-serif; box-shadow: 0 8px 24px rgba(37,99,235,0.35); transition: transform 0.2s ease;" style-hover="transform: translateY(-2px);">{{ submitText }}</button>
           <span style="color: #9aa3ad; font-size: 13.5px;">{{ upStatus }}</span>
         </div>
         <sc-if value="{{ uploading }}" hint-placeholder-val="{{ false }}">
@@ -493,7 +571,7 @@
 
   <!-- WhatsApp floating button -->
   <a href="{{ waHref }}" target="_blank" rel="noopener" style="position: fixed; bottom: 20px; right: 20px; z-index: 80; background: #1da851; color: #fff; font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; padding: 14px 22px; border-radius: 100px; text-decoration: none; box-shadow: 0 12px 30px rgba(0,0,0,0.45); display: flex; align-items: center; gap: 9px; transition: transform 0.2s ease;" style-hover="transform: translateY(-3px);">
-    <span style="width: 9px; height: 9px; border-radius: 50%; background: #b8f5cf; flex-shrink: 0;"></span>
+    <span style="width: 9px; height: 9px; border-radius: 50%; background: #b8f5cf; flex-shrink: 0; animation: dcPulse 2s ease-in-out infinite;"></span>
     <span>WhatsApp</span>
   </a>
 
@@ -506,7 +584,8 @@ class Component extends DCLogic {
     msgStatus: "", sending: false,
     upStatus: "", upPct: 0, uploading: false,
     pickedFiles: [], dragActive: false,
-    urls: [""]
+    urls: [""],
+    booted: false
   };
 
   pad2(n) { return (n < 10 ? "0" : "") + n; }
@@ -600,6 +679,11 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    var me = this;
+    // Preloader: guaranteed removal via state (timer fires even if CSS animation is throttled)
+    setTimeout(function () { me.setState({ booted: true }); }, 1700);
+    // Hero rests fully visible (no entrance gating). Decorative float/glow/scan-line
+    // animations below are infinite + rest in a visible state, so they never hide content.
     // Image loaded  -> hide its placeholders ([data-ph]) + striped/grid bg ([data-ph-bg]) so nothing shows through transparent PNGs.
     // Image missing -> hide the <img> so the placeholder stays visible.
     var settle = function (img) {
@@ -654,22 +738,33 @@ class Component extends DCLogic {
   initReveal() {
     setTimeout(function () {
       var els = document.querySelectorAll("[data-reveal]");
-      if (!("IntersectionObserver" in window)) return;
+      if (!("IntersectionObserver" in window)) {
+        els.forEach(function (el) { el.style.opacity = "1"; el.style.transform = "none"; });
+        return;
+      }
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) {
+            var d = parseInt(en.target.getAttribute("data-rd") || "0", 10);
+            en.target.style.transitionDelay = d + "ms";
             en.target.style.opacity = "1";
-            en.target.style.transform = "translateY(0px)";
+            en.target.style.transform = "none";
             io.unobserve(en.target);
           }
         });
-      }, { threshold: 0.1 });
+      }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
       els.forEach(function (el) {
         var r = el.getBoundingClientRect();
-        if (r.top < window.innerHeight * 0.9) return;
+        if (r.top < window.innerHeight * 0.92) return;
+        var parent = el.parentElement, idx = 0;
+        if (parent) {
+          var sibs = parent.querySelectorAll(":scope > [data-reveal]");
+          for (var i = 0; i < sibs.length; i++) { if (sibs[i] === el) { idx = i; break; } }
+        }
+        el.setAttribute("data-rd", String(Math.min(idx, 6) * 75));
         el.style.opacity = "0";
-        el.style.transform = "translateY(26px)";
-        el.style.transition = "opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1)";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "opacity .7s ease, transform .8s cubic-bezier(.22,.61,.36,1)";
         io.observe(el);
       });
     }, 120);
@@ -1002,6 +1097,7 @@ class Component extends DCLogic {
       socialRow: this.buildSocial(c),
       uploadZone: this.buildUploadZone(),
       navOpen: this.state.navOpen,
+      showPre: !this.state.booted,
       toggleNav: this.toggleNav,
       closeNav: this.closeNav,
       sendMsg: this.sendMsg,

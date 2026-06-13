@@ -22,6 +22,24 @@
   <link rel="icon" type="image/png" href="assets/logo.png">
   <style>
     body { margin: 0; background: #0e1116; -webkit-font-smoothing: antialiased; }
+    @keyframes admFade { from { transform: translateY(14px); } to { transform: translateY(0); } }
+    @keyframes admPop { from { transform: translateY(18px) scale(.985); } to { transform: translateY(0) scale(1); } }
+    @keyframes admStat { from { transform: translateY(16px); } to { transform: translateY(0); } }
+    @keyframes admDrift { from { background-position: 0 0; } to { background-position: 48px 48px; } }
+    [data-app] { animation: admFade .5s ease both; }
+    [data-stats-row] > * { animation: admStat .55s both cubic-bezier(.22,.61,.36,1); }
+    [data-stats-row] > *:nth-child(1) { animation-delay: .04s; }
+    [data-stats-row] > *:nth-child(2) { animation-delay: .12s; }
+    [data-stats-row] > *:nth-child(3) { animation-delay: .2s; }
+    [data-stats-row] > *:nth-child(4) { animation-delay: .28s; }
+    [data-stat] { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    [data-stat]:hover { transform: translateY(-3px); border-color: rgba(91,155,255,0.45); box-shadow: 0 16px 34px rgba(0,0,0,0.35); }
+    [data-row] { transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+    [data-row]:hover { transform: translateY(-2px); border-color: rgba(91,155,255,0.32); box-shadow: 0 14px 30px rgba(0,0,0,0.32); }
+    [data-login-card] { animation: admPop .55s cubic-bezier(.22,.61,.36,1) both; }
+    [data-login-bg] { animation: admDrift 22s linear infinite; }
+    [data-tabbtn]:hover { color: #c8cfd8 !important; }
+    @media (prefers-reduced-motion: reduce) { [data-app], [data-stats-row] > *, [data-login-card], [data-login-bg] { animation: none !important; } }
   </style>
 </helmet>
 
@@ -34,8 +52,8 @@
 
   <!-- ═══════════ LOGIN ═══════════ -->
   <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Admin Login" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background-color: #0e1116; background-image: linear-gradient(rgba(91,155,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.04) 1px, transparent 1px); background-size: 48px 48px;">
-      <div style="width: 100%; max-width: 400px; background: #11161d; border: 1px solid #1f2733; border-radius: 18px; padding: 38px 34px; box-shadow: 0 40px 90px rgba(0,0,0,0.5);">
+    <div data-screen-label="Admin Login" data-login-bg="" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background-color: #0e1116; background-image: linear-gradient(rgba(91,155,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(91,155,255,0.04) 1px, transparent 1px); background-size: 48px 48px;">
+      <div data-login-card="" style="width: 100%; max-width: 400px; background: #11161d; border: 1px solid #1f2733; border-radius: 18px; padding: 38px 34px; box-shadow: 0 40px 90px rgba(0,0,0,0.5);">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="width: 40px; height: 40px; border-radius: 9px; background: linear-gradient(135deg, #5b9bff, #2563eb); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0b0e13;">A</div>
           <div>
@@ -68,7 +86,7 @@
 
   <!-- ═══════════ APP ═══════════ -->
   <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Admin App">
+    <div data-screen-label="Admin App" data-app="">
 
       <!-- header -->
       <div style="background: #11161d; border-bottom: 1px solid #1f2733; position: sticky; top: 0; z-index: 50;">
@@ -85,14 +103,52 @@
         </div>
         <!-- tabs -->
         <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; gap: 6px; overflow-x: auto;">
-          <span onClick="{{ tabM }}" style="{{ tsM }}">MESSAGES{{ newBadge }}</span>
-          <span onClick="{{ tabI }}" style="{{ tsI }}">INTERN SUBMISSIONS</span>
-          <span onClick="{{ tabS }}" style="{{ tsS }}">SETTINGS</span>
-          <span onClick="{{ tabG }}" style="{{ tsG }}">GUIDE</span>
+          <span onClick="{{ tabM }}" data-tabbtn="" style="{{ tsM }}">MESSAGES{{ newBadge }}</span>
+          <span onClick="{{ tabI }}" data-tabbtn="" style="{{ tsI }}">INTERN SUBMISSIONS</span>
+          <span onClick="{{ tabS }}" data-tabbtn="" style="{{ tsS }}">SETTINGS</span>
+          <span onClick="{{ tabG }}" data-tabbtn="" style="{{ tsG }}">GUIDE</span>
         </div>
       </div>
 
       <div style="max-width: 1100px; margin: 0 auto; padding: 26px 24px 80px;">
+
+        <!-- ═══ DASHBOARD STATS ═══ -->
+        <div data-stats-row="" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 26px;">
+          <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">TOTAL MESSAGES</span>
+              <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoMail }}</span>
+            </div>
+            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statMsgTotal }}</div>
+            <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">{{ statMsgSub }}</div>
+          </div>
+          <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">UNREAD</span>
+              <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoBell }}</span>
+            </div>
+            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1; color: {{ unreadColor }};">{{ statUnread }}</div>
+            <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">{{ unreadSub }}</div>
+          </div>
+          <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">INTERN SUBMISSIONS</span>
+              <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoUser }}</span>
+            </div>
+            <div style="font-size: 32px; font-weight: 800; margin-top: 14px; line-height: 1;">{{ statSubs }}</div>
+            <div style="margin-top: 8px; font-size: 12.5px; color: #5e6b7a;">applications received</div>
+          </div>
+          <div data-stat="" style="position: relative; overflow: hidden; background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #79828c;">STORAGE USED</span>
+              <span style="width: 30px; height: 30px; border-radius: 8px; background: rgba(91,155,255,0.12); border: 1px solid rgba(91,155,255,0.28); display: flex; align-items: center; justify-content: center; color: #5b9bff;">{{ icoDb }}</span>
+            </div>
+            <div style="font-size: 21px; font-weight: 800; margin-top: 16px; line-height: 1;">{{ usageLabel }}</div>
+            <div style="margin-top: 12px; height: 6px; border-radius: 100px; background: #1a212b; overflow: hidden;">
+              <div style="height: 100%; border-radius: 100px; background: linear-gradient(90deg, #5b9bff, #2563eb); width: {{ usagePctW }}; transition: width .5s ease;"></div>
+            </div>
+          </div>
+        </div>
 
         <sc-if value="{{ fbMissing }}" hint-placeholder-val="{{ false }}">
           <div style="background: rgba(208,135,112,0.08); border: 1px solid rgba(208,135,112,0.4); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; color: #d08770; font-size: 14px; line-height: 1.6;">
@@ -111,7 +167,7 @@
           </sc-if>
           <div style="display: flex; flex-direction: column; gap: 14px;">
             <sc-for list="{{ messages }}" as="m" hint-placeholder-count="2">
-              <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 20px 22px;">
+              <div data-row="" style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 20px 22px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
                   <div style="display: flex; align-items: center; gap: 10px;">
                     <span style="font-weight: 700; font-size: 16px;">{{ m.name }}</span>
@@ -160,7 +216,7 @@
           </sc-if>
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <sc-for list="{{ subs }}" as="s" hint-placeholder-count="2">
-              <div style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 22px 24px;">
+              <div data-row="" style="background: #11161d; border: 1px solid #1f2733; border-radius: 14px; padding: 22px 24px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
                   <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <span style="font-weight: 700; font-size: 16.5px;">{{ s.name }}</span>
@@ -747,6 +803,14 @@ class Component extends DCLogic {
     };
   }
 
+  ico(name) {
+    var v = { width: 15, height: 15, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.9, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" };
+    if (name === "mail") return React.createElement("svg", v, React.createElement("rect", { x: 3, y: 5, width: 18, height: 14, rx: 2 }), React.createElement("path", { d: "M3 7l9 6 9-6" }));
+    if (name === "bell") return React.createElement("svg", v, React.createElement("path", { d: "M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" }), React.createElement("path", { d: "M13.7 21a2 2 0 0 1-3.4 0" }));
+    if (name === "user") return React.createElement("svg", v, React.createElement("path", { d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" }), React.createElement("circle", { cx: 12, cy: 7, r: 4 }));
+    return React.createElement("svg", v, React.createElement("ellipse", { cx: 12, cy: 5, rx: 9, ry: 3 }), React.createElement("path", { d: "M3 5v14a9 3 0 0 0 18 0V5" }), React.createElement("path", { d: "M3 12a9 3 0 0 0 18 0" }));
+  }
+
   renderVals() {
     var s = this.state;
     var A = window.ALAMZA;
@@ -838,6 +902,13 @@ class Component extends DCLogic {
       markRead: this.markRead, delMsg: this.delMsg,
       subs: subs, noSubs: subs.length === 0,
       subCountLabel: subs.length + " submission(s)",
+      statMsgTotal: messages.length,
+      statMsgSub: newCount > 0 ? (newCount + " awaiting reply") : "all caught up",
+      statUnread: newCount,
+      unreadColor: newCount > 0 ? "#5b9bff" : "#e8eaed",
+      unreadSub: newCount > 0 ? "new since last visit" : "no new messages",
+      statSubs: subs.length,
+      icoMail: this.ico("mail"), icoBell: this.ico("bell"), icoUser: this.ico("user"), icoDb: this.ico("db"),
       usagePctW: usagePct + "%",
       usageLabel: (A ? A.fmtBytes(totalBytes) : "0 B") + " / 100 MB",
       delSub: this.delSub,
