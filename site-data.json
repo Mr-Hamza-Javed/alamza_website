@@ -95,9 +95,10 @@
     "sub": "The engineers and craftsmen who run the floor.",
     "members": [
       { "name": "Javed Iqbal", "role": "Founder & Owner", "img": "team-1.jpg", "alt": "Javed Iqbal" },
-      { "name": "Butt Sahab", "role": "Senior Engineer", "img": "team-2.jpg", "alt": "Butt Sahab" },
-      { "name": "Imtanan Javed", "role": "Quality Manager", "img": "team-3.jpg", "alt": "Imtanan Javed" },
-      { "name": "Hassaan Javed", "role": "Finance Manager", "img": "team-4.jpg", "alt": "Hassaan Javed" }
+      { "name": "Imtanan Javed", "role": "Quality Manager", "img": "team-2.jpg", "alt": "Imtanan Javed" },
+      { "name": "M. Hassaan", "role": "Finance Manager", "img": "team-3.jpg", "alt": "Hassaan Javed" },
+      { "name": "Bilal Ansari", "role": "CNCia", "img": "team-4.jpg", "alt": "Bilal Javed" }
+
     ]
   },
 
