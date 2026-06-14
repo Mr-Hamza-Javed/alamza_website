@@ -10,7 +10,7 @@
   "hero": {
     "eyebrow": "SAHIWAL BYPASS · PUNJAB · PAKISTAN",
     "title": "FORGED IN SAHIWAL.",
-    "sub": "Motorcycle parts, CNC machines and cylinder sleeves — manufactured in-house at our Sahiwal facility with uncompromising precision.",
+    "sub": "Automotive Parts, CNC machines and cylinder sleeves — manufactured in-house at our Sahiwal facility with uncompromising precision.",
     "ctaPrimary": "Explore Products",
     "ctaSecondary": "WhatsApp Us",
     "partCode": "AL-VLV-001",
@@ -24,7 +24,7 @@
     "heading": "What we build",
     "sub": "Three product lines, one standard of precision.",
     "items": [
-      { "code": "AL-PRT-001", "title": "Motorcycle Parts", "desc": "Precision-machined components for major bike platforms — built to OEM tolerances.", "img": "product-parts.jpg" },
+      { "code": "AL-PRT-001", "title": "Automotive Parts", "desc": "Precision-machined components for major bike platforms — built to OEM tolerances.", "img": "product-parts.jpg" },
       { "code": "AL-CNC-002", "title": "CNC Machines", "desc": "Machines designed, built and assembled at our own facility.", "img": "product-cnc.jpg" },
       { "code": "AL-SLV-003", "title": "Cylinder Sleeves", "desc": "Hard-wearing sleeves cast and finished exactly to spec.", "img": "product-sleeve.jpg" }
     ]
@@ -95,10 +95,9 @@
     "sub": "The engineers and craftsmen who run the floor.",
     "members": [
       { "name": "Javed Iqbal", "role": "Founder & Owner", "img": "team-1.jpg", "alt": "Javed Iqbal" },
+      { "name": "Hamza Javed", "role": "Media Affairs", "img": "team-5.jpg", "alt": "Hamza Javed" }, 
       { "name": "Imtanan Javed", "role": "Quality Manager", "img": "team-2.jpg", "alt": "Imtanan Javed" },
-      { "name": "M. Hassaan", "role": "Finance Manager", "img": "team-3.jpg", "alt": "Hassaan Javed" },
-      { "name": "Faizan Ali", "role": "Machine Designer", "img": "team-4.jpg", "alt": "Faizan Ali" }
-
+      { "name": "M. Hassaan", "role": "Finance Manager", "img": "team-3.jpg", "alt": "Hassaan Javed" }
     ]
   },
 
@@ -156,9 +155,9 @@
 
   "social": {
     "facebook": "https://www.facebook.com/AlamzaIndustry",
-    "instagram": "https://www.instagram.com/alamzaindustry",
-    "youtube": "",
-    "tiktok": "",
-    "linkedin": ""
+    "instagram": "https://www.instagram.com/alamzaweb",
+    "youtube": "https://www.youtube.com/@AlamzaWeb",
+    "tiktok": "https://www.tiktok.com/@alamzaweb",
+    "linkedin": "https://www.linkedin.com/showcase/alamza/"
   }
 }
