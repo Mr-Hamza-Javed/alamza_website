@@ -139,7 +139,7 @@
     "urlPlaceholder": "https://drive.google.com/...",
     "departments": ["Production", "CNC Machining", "Quality Control", "Casting / Foundry", "Office / Admin", "Other"],
     "fields": {
-      "name":       { "label": "FULL NAME",              "placeholder": "e.g. Ahmad Raza",                "required": true },
+      "name":       { "label": "FULL NAME",              "placeholder": "e.g. Faizan Ali",                "required": true },
       "email":      { "label": "EMAIL",                  "placeholder": "you@email.com",                  "required": true },
       "phone":      { "label": "PHONE",                  "placeholder": "03xx-xxxxxxx",                   "required": true },
       "cnic":       { "label": "CNIC",                   "placeholder": "xxxxx-xxxxxxx-x",                "required": false },
